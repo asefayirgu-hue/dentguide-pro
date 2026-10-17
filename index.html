@@ -1,1443 +1,2723 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0F172A" />
-  <title>DentGuide Pro — Clinical Brushing & Interdental Suite</title>
+  <meta name="theme-color" content="#090e1a" />
+  <title>DentAlign Pro — Clinical Toothbrushing Biomechanics & Guided Pacer</title>
   <!-- Telegram Mini App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --card-border: #334155;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #0d9488;
-      --accent-soft: rgba(13, 148, 136, 0.15);
-      --danger: #dc2626;
-      --amber: #d97706;
-      --indigo: #4f46e5;
-      --radius: 14px;
-    }
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans, Inter, JetBrains Mono, Noto Sans Ethiopic & Noto Sans Arabic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Ethiopic:wght@400;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Ethiopic', 'Noto Sans Arabic', sans-serif;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding-bottom: 48px;
-      overflow-x: hidden;
-    }
-
-    /* Top Header */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(15, 23, 42, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--card-border);
-      padding: 12px 16px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    .streak-pill {
-      background: rgba(217, 119, 6, 0.2);
-      border: 1px solid var(--amber);
-      color: #fbbf24;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    select, button {
-      background: var(--card);
-      color: var(--text);
-      border: 1px solid var(--card-border);
-      padding: 7px 12px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    button:hover, select:hover {
-      border-color: var(--accent);
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    @media (min-width: 900px) {
-      .container {
-        grid-template-columns: 1.35fr 1fr;
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans Ethiopic', 'Noto Sans Arabic', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'Noto Sans Ethiopic', 'Noto Sans Arabic', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            slate: {
+              850: '#131c2e',
+              900: '#0f172a',
+              950: '#090e1a',
+            }
+          }
+        }
       }
     }
+  </script>
 
-    /* Technique Selector Tabs */
-    .method-bar {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 4px 0 10px;
-      scrollbar-width: thin;
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
-    .method-tab {
-      flex: 0 0 auto;
-      padding: 8px 14px;
+    .glass-panel {
+      background: rgba(19, 28, 46, 0.86);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .clinical-grid-bg {
+      background-color: #090e1a;
+      background-image: 
+        radial-gradient(rgba(148, 163, 184, 0.12) 1px, transparent 1px),
+        linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+      background-size: 20px 20px, 40px 40px, 40px 40px;
+    }
+
+    /* Responsive aspect-ratio canvas so Telegram Mini App (380px) never clips */
+    #biomechCanvas {
+      display: block;
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 680 / 420;
+    }
+
+    /* Custom Range Slider for Pathology Time-Lapse */
+    input[type="range"].damage-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"].damage-slider::-webkit-slider-runnable-track {
+      height: 8px;
       border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      white-space: nowrap;
-      border: 1px solid var(--card-border);
-      background: var(--card);
+      background: linear-gradient(90deg, #f59e0b 0%, #ef4444 50%, #991b1b 100%);
+    }
+    input[type="range"].damage-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 22px;
+      width: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #dc2626;
+      box-shadow: 0 0 12px rgba(220, 38, 38, 0.8);
+      margin-top: -7px;
+      transition: transform 0.15s ease;
+    }
+    input[type="range"].damage-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
     }
 
-    .method-tab.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
+    @keyframes pulseBorder {
+      0%, 100% { border-color: rgba(220, 38, 38, 0.45); }
+      50% { border-color: rgba(220, 38, 38, 0.95); }
     }
-
-    .method-tab.danger-tab.active {
-      background: var(--danger);
-      border-color: var(--danger);
-    }
-
-    /* Card Containers */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 16px;
-    }
-
-    /* Canvas Stage */
-    .stage-wrapper {
-      position: relative;
-      background: #090d16;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 2px solid var(--card-border);
-    }
-
-   canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      aspect-ratio: 680 / 360;
-    }
-
-    .stage-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .mode-group {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .mode-btn.active {
-      background: var(--indigo);
-      border-color: var(--indigo);
-      color: white;
-    }
-
-    /* Badges & Info */
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0;
-    }
-
-    .info-badge {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-    }
-
-    .step-list {
-      list-style: none;
-      margin-top: 12px;
-      display: grid;
-      gap: 10px;
-    }
-
-    .step-item {
-      background: rgba(15, 23, 42, 0.55);
-      border-inline-start: 4px solid var(--accent);
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-    }
-
-    /* Pathology Slider */
-    .damage-box {
-      display: none;
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 10px;
-      background: rgba(220, 38, 38, 0.15);
-      border: 1px solid var(--danger);
-    }
-
-    .damage-box input[type="range"] {
-      width: 100%;
-      margin-top: 8px;
-      accent-color: var(--danger);
-    }
-
-    /* Pacer Box */
-    .pacer-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin: 12px 0;
-    }
-
-    .quad-box {
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--card-border);
-      background: rgba(15, 23, 42, 0.5);
-      text-align: center;
-      font-size: 0.85rem;
-    }
-
-    .quad-box.active {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-      font-weight: 700;
-    }
-
-    .timer-display {
-      font-size: 2.2rem;
-      font-weight: 800;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-      margin: 6px 0;
-    }
-
-    /* Modals */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 16px;
-    }
-
-    .modal {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      max-width: 460px;
-      width: 100%;
-      padding: 20px;
-    }
-
-    .qr-img {
-      display: block;
-      margin: 14px auto;
-      background: white;
-      padding: 10px;
-      border-radius: 10px;
-      width: 180px;
-      height: 180px;
+    .warning-pulse {
+      animation: pulseBorder 2s infinite;
     }
   </style>
 </head>
-<body>
 
-<header>
-  <div class="brand">
-    <span>🦷 DentGuide Pro</span>
-    <span class="streak-pill" id="streakBadge">🔥 0</span>
-  </div>
-  <div class="header-controls">
-    <select id="langSelect" aria-label="Language Selector">
-      <option value="en">🇬🇧 English</option>
-      <option value="am">🇪🇹 አማርኛ (Amharic)</option>
-      <option value="om">🇪🇹 Afaan Oromoo</option>
-      <option value="ti">🇪🇹 ትግርኛ (Tigrinya)</option>
-      <option value="ar">🇸🇦 العربية (Arabic)</option>
-    </select>
-    <button id="btnTriage" class="btn-primary">✨ Matcher</button>
-    <button id="btnQr">📱 QR Link</button>
-  </div>
-</header>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased selection:bg-teal-500 selection:text-white min-h-screen flex flex-col">
 
-<div class="container">
-  <!-- Left Column: Interactive Visual Stage -->
-  <div>
-    <div class="method-bar" id="methodBar"></div>
-
-    <div class="card">
-      <div class="stage-wrapper" id="stageWrapper">
-        <canvas id="dentalCanvas" width="680" height="360"></canvas>
-      </div>
-
-      <!-- Stage View Switcher (Milestone 1: Buccal + Loupe vs Lingual Heel vs Interdental) -->
-      <div class="stage-toolbar">
-        <div class="mode-group">
-          <button class="mode-btn active" data-view="buccal" id="viewBuccal">1. Buccal + Sulcus Loupe</button>
-          <button class="mode-btn" data-view="lingual" id="viewLingual">2. Lingual Vertical Heel</button>
-          <button class="mode-btn" data-view="interdental" id="viewInterdental">3. Interdental Floss/Brush</button>
+  <header class="sticky top-0 z-30 glass-panel border-b border-slate-800/80 px-3 sm:px-6 lg:px-8 py-2.5">
+    <div class="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-2.5">
+      <!-- Brand Identity + Streak Badge -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div id="brandIconBox" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal-500/20 border border-teal-500/40 flex items-center justify-center text-teal-400 shadow-lg shadow-teal-500/10 shrink-0">
+          <i class="fa-solid fa-tooth text-base sm:text-lg"></i>
         </div>
-        <button id="btnSlowMo">🐢 0.5x Slow-Mo</button>
-      </div>
-
-      <!-- Time-Lapse Pathology Slider (Only for Horizontal Scrub #6) -->
-      <div class="damage-box" id="damageBox">
-        <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; color:#fca5a5;">
-          <span id="lblDamageTitle">⚠️ Time-Lapse Cervical Abrasion & Recession</span>
-          <span id="lblDamageYear">Year 2.5</span>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="font-display font-bold text-base sm:text-xl tracking-tight text-white truncate">
+              DentAlign <span class="text-teal-400 font-extrabold">Pro</span>
+            </h1>
+            <span id="streakHeaderPill" class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40" title="Completed 2-Min Brushing Sessions">
+              🔥 <span id="streakCountText">0</span>
+            </span>
+          </div>
+          <p id="headerSubtitle" class="text-[11px] text-slate-400 hidden sm:block truncate">
+            Interactive Sulcular, Lingual & Interdental Biomechanics + 2-Min Clinical Pacer
+          </p>
         </div>
-        <input type="range" id="damageSlider" min="0" max="5" step="0.1" value="2.5" />
+      </div>
+
+      <!-- Language Selector & Quick Action CTAs -->
+      <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+        <!-- 5-Language Switcher -->
+        <div class="relative">
+          <select id="langSelect" aria-label="Select Language" class="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-100 border border-slate-700 text-xs font-medium cursor-pointer focus:outline-none focus:border-teal-400 transition">
+            <option value="en">🇬🇧 English</option>
+            <option value="am">🇪🇹 አማርኛ (Amharic)</option>
+            <option value="om">🇪🇹 Afaan Oromoo</option>
+            <option value="ti">🇪🇹 ትግርኛ (Tigrinya)</option>
+            <option value="ar">🇸🇦 العربية (Arabic)</option>
+          </select>
+        </div>
+
+        <button id="openMatcherBtn" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 text-slate-100 border border-slate-700 text-xs font-medium flex items-center gap-1.5 transition shadow-sm">
+          <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+          <span id="navMatcherLabel">Matcher</span>
+          <span id="matchedIndicator" class="hidden w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        </button>
+
+        <button id="openQrBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 text-slate-200 border border-slate-700 text-xs font-medium flex items-center gap-1.5 transition" title="Generate Chairside Patient QR Prescription">
+          <i class="fa-solid fa-qrcode text-sky-400"></i>
+          <span class="hidden md:inline" id="navQrLabel">QR Link</span>
+        </button>
+
+        <button id="openPacerBtn" class="px-3 sm:px-4 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-display font-semibold text-xs flex items-center gap-1.5 transition shadow-lg shadow-teal-600/25">
+          <i class="fa-solid fa-stopwatch"></i>
+          <span id="navPacerLabel">2-Min Pacer</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- HORIZONTAL TECHNIQUE SELECTOR PILLS -->
+    <div class="max-w-[1440px] mx-auto mt-2.5 pt-2 border-t border-slate-800/70">
+      <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 no-scrollbar" id="techniqueNavContainer">
+        <!-- Populated dynamically via JS -->
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-[1440px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+      <!-- LEFT / PRIMARY STAGE (7 COLUMNS): BIOMECHANICAL ANIMATION STAGE -->
+      <section class="lg:col-span-7 flex flex-col gap-4 min-w-0 w-full">
+        
+        <div id="stageCard" class="rounded-2xl clinical-grid-bg border border-slate-800 shadow-2xl overflow-hidden relative flex flex-col transition-colors duration-300 w-full">
+          
+          <!-- Stage Top Telemetry Bar -->
+          <div class="px-3.5 py-2.5 bg-slate-900/95 border-b border-slate-800/90 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <span id="stageBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/30 shrink-0">
+                Gold Standard
+              </span>
+              <h2 id="stageTitle" class="font-display font-bold text-sm sm:text-base text-white truncate">
+                Bass Method (Intrasulcular)
+              </h2>
+            </div>
+
+            <!-- Live Telemetry Readouts -->
+            <div class="flex items-center gap-2 text-[11px] font-mono">
+              <div class="px-2 py-1 rounded-lg bg-slate-950/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-compass-drafting text-teal-400"></i>
+                <strong id="telemetryAngle" class="text-white">45° Apical</strong>
+              </div>
+              <div class="px-2 py-1 rounded-lg bg-slate-950/90 border border-slate-800 text-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-bacteria text-sky-400"></i>
+                <span class="hidden sm:inline" id="lblBiofilmCleared">CLEARED:</span>
+                <strong id="telemetryPlaque" class="text-emerald-400">0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3-VIEW CLINICAL CAMERA MODE SWITCHER (Buccal+Loupe vs Lingual Heel vs Interdental) -->
+          <div class="px-3 py-2 bg-slate-950/90 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+            <div class="grid grid-cols-3 gap-1.5 w-full sm:w-auto flex-1">
+              <button type="button" data-view="buccal" class="view-mode-btn px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition bg-teal-600 text-white shadow">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                <span id="viewBtnBuccal">1. Buccal + Loupe</span>
+              </button>
+              <button type="button" data-view="lingual" class="view-mode-btn px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition bg-slate-800/90 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
+                <i class="fa-solid fa-rotate-90"></i>
+                <span id="viewBtnLingual">2. Lingual Heel</span>
+              </button>
+              <button type="button" data-view="interdental" class="view-mode-btn px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition bg-slate-800/90 text-slate-300 hover:bg-slate-800 border border-slate-700/70">
+                <i class="fa-solid fa-Grip-lines-vertical"></i>
+                <span id="viewBtnInterdental">3. Interdental</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Responsive Aspect-Ratio Interactive Canvas Container -->
+          <div class="relative w-full select-none overflow-hidden bg-slate-950">
+            <canvas id="biomechCanvas" width="680" height="420"></canvas>
+
+            <!-- Reset Biofilm Button -->
+            <button id="resetPlaqueBtn" title="Re-apply disclosing plaque biofilm" class="absolute bottom-2.5 left-2.5 px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-700 text-[11px] font-mono flex items-center gap-1.5 transition shadow">
+              <i class="fa-solid fa-rotate-left text-teal-400"></i>
+              <span id="btnResetBiofilmText">Reset Biofilm</span>
+            </button>
+          </div>
+
+          <!-- DYNAMIC 2-PHASE BIOMECHANICAL PROGRESS BAR -->
+          <div class="px-3.5 py-2 bg-slate-900/95 border-t border-slate-800/80">
+            <div class="flex items-center justify-between text-[11px] font-mono mb-1">
+              <span class="text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-wave-square text-teal-400"></i>
+                <span id="phaseBarLabel">STROKE CYCLE</span>
+              </span>
+              <span id="activePhaseText" class="font-semibold text-teal-300 truncate">Phase 1: Intrasulcular Vibration</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                <div id="phaseFill1" class="h-full bg-teal-400 transition-all duration-75 w-0"></div>
+              </div>
+              <div class="h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                <div id="phaseFill2" class="h-full bg-sky-400 transition-all duration-75 w-0"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STAGE PLAYBACK & VECTOR CONTROLS BAR -->
+          <div class="px-3.5 py-2.5 bg-slate-950 border-t border-slate-800/90 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5">
+              <button id="playPauseBtn" class="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-medium text-xs flex items-center gap-1.5 transition shadow">
+                <i class="fa-solid fa-pause" id="playPauseIcon"></i>
+                <span id="playPauseText">Pause</span>
+              </button>
+
+              <button id="speedToggleBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono text-xs flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-gauge-simple-low text-amber-400"></i>
+                <span id="speedToggleText">1.0x Normal</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button id="toggleVectorsBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-teal-300 border border-teal-500/40 text-xs font-medium flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-compass"></i>
+                <span id="btnVectorsText">Vectors: ON</span>
+              </button>
+
+              <button id="toggleLoupeBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-sky-300 border border-sky-500/40 text-xs font-medium flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                <span id="btnLoupeText">Loupe: ON</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERACTIVE TIME-LAPSE DAMAGE SIMULATOR (For #6 Horizontal Scrub) -->
+        <div id="damageSimulatorCard" class="hidden rounded-2xl bg-red-950/35 border-2 border-red-500/60 p-4 shadow-xl warning-pulse">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 shrink-0">
+                <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+              </div>
+              <div>
+                <h3 id="damageCardTitle" class="font-display font-bold text-sm sm:text-base text-red-200">
+                  Interactive Pathology Time-Lapse: Cervical Abrasion (NCCL) & Recession
+                </h3>
+                <p id="damageCardSub" class="text-xs text-red-300/80">
+                  Drag the slider to inspect 5-year cumulative hard & soft tissue destruction from horizontal sawing.
+                </p>
+              </div>
+            </div>
+            <span id="damageTimeBadge" class="self-start sm:self-center px-3 py-1 rounded-full font-mono text-xs font-bold bg-red-600 text-white shadow shrink-0">
+              Year 1.8
+            </span>
+          </div>
+
+          <div class="my-2.5 px-1">
+            <input id="damageRangeSlider" type="range" min="0" max="100" value="35" class="w-full damage-slider" />
+            <div class="flex justify-between text-[10px] font-mono text-red-300/90 mt-1">
+              <span>Month 1 (Healthy CEJ)</span>
+              <span>Year 2.5 (Recession + Dentin Exposure)</span>
+              <span>Year 5 (Deep V-Shaped Wedge Notch)</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 mt-2 pt-2.5 border-t border-red-500/30 text-xs font-mono">
+            <div class="p-2 rounded-xl bg-slate-950/80 border border-red-500/30">
+              <div class="text-slate-400 text-[10px]">GINGIVAL RECESSION</div>
+              <div id="metricRecession" class="text-xs sm:text-sm font-bold text-red-400 mt-0.5">+1.3 mm Apical</div>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-950/80 border border-red-500/30">
+              <div class="text-slate-400 text-[10px]">CERVICAL NOTCH</div>
+              <div id="metricNotch" class="text-xs sm:text-sm font-bold text-amber-400 mt-0.5">0.8 mm V-Wedge</div>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-950/80 border border-red-500/30">
+              <div class="text-slate-400 text-[10px]">INTERPROXIMAL PLAQUE</div>
+              <div id="metricMissed" class="text-xs sm:text-sm font-bold text-rose-500 mt-0.5">85% Unreached</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <aside class="lg:col-span-5 flex flex-col gap-4 min-w-0 w-full">
+
+        <!-- Technique Overview & Parameter Pills Card -->
+        <div class="rounded-2xl glass-panel p-4 sm:p-5 shadow-xl">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span id="detailCategoryTag" class="text-[11px] font-mono uppercase tracking-wider font-semibold text-teal-400">
+                INTRASULCULAR GOLD STANDARD
+              </span>
+              <h2 id="detailMethodName" class="font-display font-bold text-lg sm:text-2xl text-white mt-0.5">
+                Bass Method (Intrasulcular)
+              </h2>
+            </div>
+            <button id="compareHorizontalBtn" class="px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 text-xs font-medium flex items-center gap-1.5 transition shrink-0">
+              <i class="fa-solid fa-triangle-exclamation text-red-400"></i>
+              <span id="whyNotScrubLabel">Why Not Scrub?</span>
+            </button>
+          </div>
+
+          <!-- Clinical Indication Box -->
+          <div class="mt-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800">
+            <div class="text-[11px] font-mono uppercase text-slate-400 mb-1 flex items-center gap-1.5">
+              <i class="fa-solid fa-stethoscope text-teal-400"></i>
+              <span id="lblIndicationHeader">Clinical Indication & Patient Profile</span>
+            </div>
+            <p id="detailIndication" class="text-xs sm:text-sm text-slate-200 leading-relaxed"></p>
+          </div>
+
+          <!-- 3 Quick-Glance Parameter Badges -->
+          <div class="grid grid-cols-3 gap-2 mt-3">
+            <div class="p-2.5 rounded-xl bg-slate-900/75 border border-slate-800/90">
+              <div class="text-[10px] font-mono text-slate-400 uppercase" id="lblParamAngle">BRISTLE ANGLE</div>
+              <div id="paramAngle" class="font-mono font-bold text-xs text-white mt-1">45° Apical</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/75 border border-slate-800/90">
+              <div class="text-[10px] font-mono text-slate-400 uppercase" id="lblParamMotion">STROKE VECTOR</div>
+              <div id="paramMotion" class="font-mono font-bold text-xs text-white mt-1">Short Vibratory</div>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-900/75 border border-slate-800/90">
+              <div class="text-[10px] font-mono text-slate-400 uppercase" id="lblParamForce">FORCE THRESHOLD</div>
+              <div id="paramPressure" class="font-mono font-bold text-xs text-white mt-1">Light (~150g)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Synchronized Step-by-Step Scrollytelling Cards -->
+        <div class="rounded-2xl glass-panel p-4 sm:p-5 shadow-xl flex flex-col gap-3">
+          <div class="flex items-center justify-between">
+            <h3 class="font-display font-bold text-sm sm:text-base text-white flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-teal-400"></i>
+              <span id="lblStepsHeader">Synchronized Biomechanical Steps</span>
+            </h3>
+            <span class="text-[10px] font-mono text-slate-400" id="lblClickStepHint">Tap step to lock phase</span>
+          </div>
+
+          <div id="stepsListContainer" class="flex flex-col gap-2">
+            <!-- Dynamically populated step cards -->
+          </div>
+
+          <!-- Animation Cue Clinical Callout -->
+          <div class="mt-1 p-3 rounded-xl bg-teal-950/30 border border-teal-500/30 flex items-start gap-2.5">
+            <i class="fa-solid fa-eye text-teal-400 mt-0.5 text-sm"></i>
+            <div class="text-xs leading-relaxed text-slate-300">
+              <strong class="text-white font-semibold block mb-0.5" id="lblWatchCueHeader">What to Watch in the Loupe & Stage:</strong>
+              <span id="detailAnimationCue"></span>
+            </div>
+          </div>
+
+          <!-- Launch Guided Timer CTA inside Sidebar -->
+          <button id="sidebarLaunchPacerBtn" class="mt-1 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-sky-600 hover:from-teal-500 hover:to-sky-500 text-white font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all">
+            <i class="fa-solid fa-play"></i>
+            <span id="sidebarLaunchPacerText">Start 2-Min Guided Pacer</span>
+          </button>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 1: SMART TECHNIQUE MATCHER (DIAGNOSTIC TRIAGE QUIZ)                 -->
+  <!-- ========================================================================= -->
+  <div id="matcherModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="w-full max-w-xl rounded-2xl glass-panel border border-slate-700/80 shadow-2xl overflow-hidden">
+      <div class="px-5 py-4 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+            <i class="fa-solid fa-user-doctor"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-base text-white">Clinical Brushing Prescription Matcher</h3>
+            <p class="text-xs text-slate-400">Match your periodontal & orthodontic profile in 3 steps</p>
+          </div>
+        </div>
+        <button id="closeMatcherBtn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
+        <div>
+          <label class="block text-xs font-mono uppercase text-slate-300 mb-2">
+            1. Fixed orthodontic appliances (braces) or bridgework?
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button type="button" data-q="ortho" data-val="yes" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-left flex items-center gap-3 transition">
+              <i class="fa-solid fa-teeth-open text-indigo-400 text-lg w-6 text-center"></i>
+              <div>
+                <div class="text-xs font-semibold text-white">Yes — Braces, Wires, or Bridge</div>
+                <div class="text-[11px] text-slate-400">Brackets, archwires, or healing gums</div>
+              </div>
+            </button>
+            <button type="button" data-q="ortho" data-val="no" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-teal-500/60 bg-teal-950/20 text-left flex items-center gap-3 transition">
+              <i class="fa-solid fa-tooth text-teal-400 text-lg w-6 text-center"></i>
+              <div>
+                <div class="text-xs font-semibold text-white">No Fixed Hardware</div>
+                <div class="text-[11px] text-slate-400">Natural dentition or aligners</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono uppercase text-slate-300 mb-2">
+            2. Gingival (gumline) & root status:
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button type="button" data-q="gums" data-val="recession" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-left flex items-center gap-3 transition">
+              <i class="fa-solid fa-arrow-trend-down text-violet-400 text-lg w-6 text-center"></i>
+              <div>
+                <div class="text-xs font-semibold text-white">Gum Recession / Root Sensitivity</div>
+                <div class="text-[11px] text-slate-400">Exposed roots or thin gingiva</div>
+              </div>
+            </button>
+            <button type="button" data-q="gums" data-val="normal" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-teal-500/60 bg-teal-950/20 text-left flex items-center gap-3 transition">
+              <i class="fa-solid fa-shield-heart text-emerald-400 text-lg w-6 text-center"></i>
+              <div>
+                <div class="text-xs font-semibold text-white">Healthy or Mild Gingivitis</div>
+                <div class="text-[11px] text-slate-400">Standard sulcus, no root exposure</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono uppercase text-slate-300 mb-2">
+            3. Manual Dexterity & Age Profile:
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <button type="button" data-q="dex" data-val="adult_sweep" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-teal-500/60 bg-teal-950/20 text-left transition">
+              <div class="text-xs font-semibold text-white">Adult (Full Control)</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Sulcus + Crown Sweep</div>
+            </button>
+            <button type="button" data-q="dex" data-val="adult_standard" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-left transition">
+              <div class="text-xs font-semibold text-white">Adult (Sulcus Focus)</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Pure intrasulcular</div>
+            </button>
+            <button type="button" data-q="dex" data-val="child" class="quiz-opt p-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-left transition">
+              <div class="text-xs font-semibold text-white">Child / Easy Motion</div>
+              <div class="text-[11px] text-slate-400 mt-0.5">Simple circular loop</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-900/95 border border-teal-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded bg-teal-500/20 text-teal-300">
+              RECOMMENDED CLINICAL METHOD
+            </span>
+            <h4 id="quizRecTitle" class="font-display font-bold text-base sm:text-lg text-white mt-1">
+              Modified Bass Method
+            </h4>
+            <p id="quizRecReason" class="text-xs text-slate-300 mt-0.5"></p>
+          </div>
+          <button id="applyMatcherBtn" class="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-display font-bold text-xs sm:text-sm shrink-0 transition shadow-lg">
+            Load Technique &rarr;
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Right Column: Clinical Text + 2-Minute Guided Pacer -->
-  <div style="display:flex; flex-direction:column; gap:16px;">
-    <div class="card">
-      <h2 id="techTitle" style="font-size:1.25rem;"></h2>
-      <div class="badge-row">
-        <span class="info-badge" id="badgeAngle"></span>
-        <span class="info-badge" id="badgeCategory"></span>
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: CHAIRSIDE PATIENT QR DEEP-LINK GENERATOR                         -->
+  <!-- ========================================================================= -->
+  <div id="qrModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="w-full max-w-md rounded-2xl glass-panel border border-slate-700/80 shadow-2xl overflow-hidden p-5 text-center space-y-3">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2 text-left">
+          <i class="fa-solid fa-qrcode text-sky-400 text-lg"></i>
+          <h3 class="font-display font-bold text-base text-white">Chairside Patient QR Prescription</h3>
+        </div>
+        <button id="closeQrBtn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
-      <p id="techIndication" style="color:var(--muted); font-size:0.92rem;"></p>
-      <ul class="step-list" id="stepList"></ul>
-    </div>
-
-    <!-- 2-Minute Audio/Voice Pacer -->
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <h3 id="lblPacerTitle" style="font-size:1.05rem;">⏱️ 2-Minute Quadrant Pacer</h3>
-        <label style="font-size:0.8rem; display:flex; align-items:center; gap:5px;">
-          <input type="checkbox" id="chkVoice" checked />
-          <span id="lblVoiceToggle">Voice Audio</span>
-        </label>
+      <p class="text-xs text-slate-300">
+        Scanning this QR code opens directly to <strong id="qrMethodLabel" class="text-teal-300"></strong> in the currently active language.
+      </p>
+      <div class="bg-white p-3 rounded-2xl inline-block mx-auto shadow-lg">
+        <img id="qrCodeImg" src="" alt="Patient Prescription QR Code" class="w-44 h-44 block" />
       </div>
-
-      <div class="timer-display" id="timerDisplay">02:00</div>
-      <div id="pacerSurfaceCue" style="text-align:center; font-size:0.85rem; color:var(--accent); font-weight:600; min-height:1.4em;"></div>
-
-      <div class="pacer-grid">
-        <div class="quad-box active" id="quad0">1. Upper Right (UR)</div>
-        <div class="quad-box" id="quad1">2. Upper Left (UL)</div>
-        <div class="quad-box" id="quad2">3. Lower Left (LL)</div>
-        <div class="quad-box" id="quad3">4. Lower Right (LR)</div>
-      </div>
-
-      <div style="display:flex; gap:8px;">
-        <button id="btnStartTimer" class="btn-primary" style="flex:1;">▶️ Start 2-Min Session</button>
-        <button id="btnResetTimer">↺ Reset</button>
+      <div class="flex items-center gap-2">
+        <input id="qrDeepLinkInput" type="text" readonly class="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-mono text-slate-300" />
+        <button id="copyQrLinkBtn" class="px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-semibold shrink-0">
+          Copy
+        </button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Modal 1: Smart Clinical Matcher -->
-<div class="modal-backdrop" id="triageModal">
-  <div class="modal">
-    <h3 id="triageHeading" style="margin-bottom:12px;">Smart Clinical Technique Matcher</h3>
-    <div style="display:grid; gap:10px; font-size:0.9rem;">
-      <label id="q1Label">1. Do you wear braces or fixed bridges?</label>
-      <select id="qBraces">
-        <option value="no">No</option>
-        <option value="yes">Yes (Brackets / Bridge)</option>
-      </select>
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: 2-MINUTE GUIDED QUADRANT BRUSHING PACER                          -->
+  <!-- ========================================================================= -->
+  <div id="pacerModal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-lg">
+    <div class="w-full max-w-3xl rounded-2xl glass-panel border border-slate-700/80 shadow-2xl overflow-hidden max-h-[92vh] overflow-y-auto">
+      
+      <div class="px-5 py-3.5 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-500/40 flex items-center justify-center text-teal-400">
+            <i class="fa-solid fa-stopwatch text-lg"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="font-display font-bold text-sm sm:text-base text-white" id="pacerModalTitle">2-Minute Clinical Quadrant Pacer</h3>
+              <span id="pacerActiveMethodBadge" class="px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/30">
+                Bass Method
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400">30s per quadrant &bull; 10s Buccal, 10s Lingual, 10s Occlusal</p>
+          </div>
+        </div>
+        <button id="closePacerBtn" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
 
-      <label id="q2Label">2. Do you have gum recession or exposed sensitive roots?</label>
-      <select id="qRecession">
-        <option value="no">No — Healthy Gumline</option>
-        <option value="yes">Yes — Gum Recession / Sensitivity</option>
-      </select>
+      <!-- Warning State if Horizontal Scrub is active -->
+      <div id="pacerContraindicatedWarning" class="hidden p-8 text-center space-y-4">
+        <div class="w-14 h-14 rounded-2xl bg-red-500/20 border border-red-500/40 text-red-400 flex items-center justify-center mx-auto text-2xl">
+          <i class="fa-solid fa-ban"></i>
+        </div>
+        <h4 class="font-display font-bold text-lg text-white">Guided Pacer Disabled for Horizontal Scrub</h4>
+        <p class="text-xs sm:text-sm text-slate-300 max-w-md mx-auto leading-relaxed">
+          The <strong>Horizontal Scrub Technique</strong> is a clinical anti-pattern included strictly to demonstrate cervical enamel abrasion and gingival recession. Switch to a recommended method to start your 2-minute session.
+        </p>
+        <button id="switchToModBassFromPacerBtn" class="px-5 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-display font-bold text-xs sm:text-sm transition">
+          Switch to Modified Bass & Start Timer
+        </button>
+      </div>
 
-      <label id="q3Label">3. Patient Age / Dexterity Profile:</label>
-      <select id="qAge">
-        <option value="adult">Adult / Teen</option>
-        <option value="child">Young Child / Limited Dexterity</option>
-      </select>
-    </div>
-    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:16px;">
-      <button onclick="document.getElementById('triageModal').style.display='none'">Close</button>
-      <button class="btn-primary" id="btnApplyTriage">Recommend Technique</button>
+      <!-- Active Pacer Content -->
+      <div id="pacerActiveBody" class="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-12 gap-5 items-center">
+        
+        <!-- Interactive SVG Dental Arch Map (4 Quadrants) -->
+        <div class="md:col-span-6 flex flex-col items-center bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5">
+          <div class="w-full flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1">
+            <span>DENTAL ARCH QUADRANT MAP</span>
+            <span id="pacerQuadrantName" class="text-teal-400 font-bold">Q1: Upper Right</span>
+          </div>
+
+          <svg id="dentalArchSvg" viewBox="0 0 260 280" class="w-48 h-52 sm:w-56 sm:h-60 select-none">
+            <line x1="130" y1="15" x2="130" y2="265" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4 4" />
+            <line x1="15" y1="140" x2="245" y2="140" stroke="#1e293b" stroke-width="1.5" stroke-dasharray="4 4" />
+            <text x="130" y="12" text-anchor="middle" fill="#64748b" font-size="9" font-family="JetBrains Mono">MAXILLARY (UPPER)</text>
+            <text x="130" y="276" text-anchor="middle" fill="#64748b" font-size="9" font-family="JetBrains Mono">MANDIBULAR (LOWER)</text>
+
+            <!-- Q1: Upper Right -->
+            <g id="archQ1">
+              <path d="M 45 125 C 45 55, 85 25, 126 25" fill="none" stroke="#0d9488" stroke-width="22" stroke-linecap="round" opacity="0.5" id="archQ1Glow"/>
+              <circle cx="50" cy="118" r="8" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="53" cy="98" r="8" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="60" cy="79" r="7.5" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="70" cy="62" r="7" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="83" cy="47" r="7" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="99" cy="37" r="6.5" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="117" cy="32" r="7.5" fill="#e2e8f0" stroke="#0f172a" stroke-width="1.5"/>
+              <text x="58" y="34" fill="#94a3b8" font-size="10" font-family="JetBrains Mono" font-weight="bold">UR (Q1)</text>
+            </g>
+
+            <!-- Q2: Upper Left -->
+            <g id="archQ2">
+              <path d="M 215 125 C 215 55, 175 25, 134 25" fill="none" stroke="#334155" stroke-width="22" stroke-linecap="round" opacity="0.25" id="archQ2Glow"/>
+              <circle cx="143" cy="32" r="7.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="161" cy="37" r="6.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="177" cy="47" r="7" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="190" cy="62" r="7" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="200" cy="79" r="7.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="207" cy="98" r="8" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="210" cy="118" r="8" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <text x="172" y="34" fill="#64748b" font-size="10" font-family="JetBrains Mono" font-weight="bold">UL (Q2)</text>
+            </g>
+
+            <!-- Q3: Lower Left -->
+            <g id="archQ3">
+              <path d="M 215 155 C 215 225, 175 255, 134 255" fill="none" stroke="#334155" stroke-width="22" stroke-linecap="round" opacity="0.25" id="archQ3Glow"/>
+              <circle cx="142" cy="248" r="6" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="158" cy="244" r="6" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="174" cy="235" r="6.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="187" cy="220" r="7" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="198" cy="202" r="7.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="206" cy="182" r="8" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="209" cy="161" r="8" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <text x="172" y="256" fill="#64748b" font-size="10" font-family="JetBrains Mono" font-weight="bold">LL (Q3)</text>
+            </g>
+
+            <!-- Q4: Lower Right -->
+            <g id="archQ4">
+              <path d="M 45 155 C 45 225, 85 255, 126 255" fill="none" stroke="#334155" stroke-width="22" stroke-linecap="round" opacity="0.25" id="archQ4Glow"/>
+              <circle cx="51" cy="161" r="8" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="54" cy="182" r="8" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="62" cy="202" r="7.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="73" cy="220" r="7" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="86" cy="235" r="6.5" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="102" cy="244" r="6" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <circle cx="118" cy="248" r="6" fill="#64748b" stroke="#0f172a" stroke-width="1.5"/>
+              <text x="58" y="256" fill="#64748b" font-size="10" font-family="JetBrains Mono" font-weight="bold">LR (Q4)</text>
+            </g>
+
+            <rect x="70" y="116" width="120" height="48" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+            <text x="130" y="135" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="JetBrains Mono">ACTIVE SURFACE</text>
+            <text id="svgSurfaceLabel" x="130" y="153" text-anchor="middle" fill="#2dd4bf" font-size="11" font-family="Plus Jakarta Sans" font-weight="bold">BUCCAL (OUTER)</text>
+          </svg>
+
+          <div class="w-full grid grid-cols-3 gap-1.5 mt-2 text-center font-mono text-[10px]">
+            <div id="surfPillBuccal" class="py-1.5 px-1 rounded-lg bg-teal-500/20 border border-teal-500/50 text-teal-300 font-semibold">
+              1. Buccal (10s)
+            </div>
+            <div id="surfPillLingual" class="py-1.5 px-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400">
+              2. Lingual (10s)
+            </div>
+            <div id="surfPillOcclusal" class="py-1.5 px-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400">
+              3. Occlusal (10s)
+            </div>
+          </div>
+        </div>
+
+        <!-- Countdown Clock, Audio/Voice Cues & Coach Instructions -->
+        <div class="md:col-span-6 flex flex-col justify-between space-y-3.5">
+          <div class="p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-mono text-slate-400">SESSION REMAINING</span>
+              <div class="flex items-center gap-3">
+                <button id="pacerVoiceToggleBtn" class="text-[11px] font-mono text-sky-400 flex items-center gap-1 hover:underline">
+                  <i class="fa-solid fa-microphone-lines" id="pacerVoiceIcon"></i>
+                  <span id="pacerVoiceText">Voice ON</span>
+                </button>
+                <button id="pacerAudioToggleBtn" class="text-[11px] font-mono text-teal-400 flex items-center gap-1 hover:underline">
+                  <i class="fa-solid fa-volume-high" id="pacerAudioIcon"></i>
+                  <span id="pacerAudioText">Chimes ON</span>
+                </button>
+              </div>
+            </div>
+            <div class="flex items-baseline gap-3 mt-1">
+              <div id="pacerTimeDisplay" class="font-mono font-extrabold text-4xl sm:text-5xl text-white tracking-tight">
+                02:00
+              </div>
+              <div class="text-xs font-mono text-teal-400" id="pacerSubTimer">
+                Quad: 30s left
+              </div>
+            </div>
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden mt-2.5">
+              <div id="pacerProgressBar" class="h-full bg-gradient-to-r from-teal-400 to-sky-400 w-0 transition-all duration-300"></div>
+            </div>
+          </div>
+
+          <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-1.5">
+            <div class="text-[11px] font-mono text-teal-400 uppercase flex items-center gap-1.5">
+              <i class="fa-solid fa-comment-medical"></i>
+              <span>LIVE TECHNIQUE COACHING CUE</span>
+            </div>
+            <p id="pacerLiveInstruction" class="text-xs sm:text-sm text-slate-200 leading-relaxed"></p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="pacerStartPauseBtn" class="flex-1 py-2.5 px-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-lg">
+              <i class="fa-solid fa-play" id="pacerStartPauseIcon"></i>
+              <span id="pacerStartPauseText">Start 2-Min Session</span>
+            </button>
+            <button id="pacerSkipQuadBtn" title="Skip to next quadrant (30s)" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-mono flex items-center gap-1 transition">
+              <i class="fa-solid fa-forward-step"></i>
+              <span>Next</span>
+            </button>
+            <button id="pacerResetBtn" title="Reset timer" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs transition">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Modal 2: Chairside QR Code Generator -->
-<div class="modal-backdrop" id="qrModal">
-  <div class="modal" style="text-align:center;">
-    <h3>Chairside Patient QR Prescription</h3>
-    <p style="font-size:0.83rem; color:var(--muted); margin-top:4px;">
-      Patients scanning this code open directly to the selected technique and language.
-    </p>
-    <img id="qrImage" class="qr-img" alt="QR Code" />
-    <input id="qrUrlInput" readonly style="width:100%; padding:8px; border-radius:8px; border:1px solid var(--card-border); background:#090d16; color:var(--text); font-size:0.78rem; margin-bottom:12px;" />
-    <button class="btn-primary" onclick="document.getElementById('qrModal').style.display='none'">Done</button>
-  </div>
-</div>
-
-<script>
-/* ============================================================================
-   1. 5-LANGUAGE CLINICAL LOCALIZATION PACK (EN, AM, OM, TI, AR)
-   ============================================================================ */
-const UI_STRINGS = {
-  en: {
-    dir: "ltr",
-    matcherBtn: "✨ Matcher",
-    viewBuccal: "1. Buccal + Sulcus Loupe",
-    viewLingual: "2. Lingual Vertical Heel",
-    viewInterdental: "3. Interdental Floss/Brush",
-    pacerTitle: "⏱️ 2-Minute Quadrant Pacer",
-    voiceToggle: "Voice Audio",
-    startBtn: "▶️ Start 2-Min Session",
-    pauseBtn: "⏸️ Pause",
-    lockedBtn: "🚫 Unsafe Technique — Timer Disabled",
-    surfaces: ["Outer (Buccal) — 10s", "Inner (Lingual/Palatal) — 10s", "Chewing (Occlusal) — 10s"],
-    quads: ["1. Upper Right", "2. Upper Left", "3. Lower Left", "4. Lower Right"]
-  },
-  am: {
-    dir: "ltr",
-    matcherBtn: "✨ ዘዴ መምረጫ",
-    viewBuccal: "1. የውጭ ገጽታ እና የድድ ซูም",
-    viewLingual: "2. የውስጥ የፊት ጥርስ (በቁመት)",
-    viewInterdental: "3. በጥርሶች መካከል (ክር/ብሩሽ)",
-    pacerTitle: "⏱️ የ2-ደቂቃ የቦረሽ ሰዓት መቆጣጠሪያ",
-    voiceToggle: "የድምፅ መመሪያ",
-    startBtn: "▶️ የ2-ደቂቃ ክፍለ ጊዜ ጀምር",
-    pauseBtn: "⏸️ አቁም",
-    lockedBtn: "🚫 አደገኛ አቦራረሽ — ሰዓት ተዘግቷል",
-    surfaces: ["የውጭ ገጽታ (Buccal) — 10 ሰከንድ", "የውስጥ ገጽታ (Lingual) — 10 ሰከንድ", "መupie/መነከሻ ገጽታ — 10 ሰከንድ"],
-    quads: ["1. ላይኛው ቀኝ", "2. ላይኛው ግራ", "3. ታችኛው ግራ", "4. ታችኛው ቀኝ"]
-  },
-  om: {
-    dir: "ltr",
-    matcherBtn: "✨ Mala Filannoo",
-    viewBuccal: "1. Fuula Alaa & Ilaalcha Irgoo",
-    viewLingual: "2. Ilkaan Fuulduraa Keessaa",
-    viewInterdental: "3. Gidduu Ilkaanii (Floss)",
-    pacerTitle: "⏱️ Yeroo Rigaa Daqiiqaa 2",
-    voiceToggle: "Qajeelfama Sagalee",
-    startBtn: "▶️ Daqiiqaa 2 Jalqabi",
-    pauseBtn: "⏸️ Dhaabi",
-    lockedBtn: "🚫 Mala Miidhaa Geessisu — Cufameera",
-    surfaces: ["Fuula Alaa (Buccal) — 10s", "Fuula Keessaa (Lingual) — 10s", "Bakka Alanfannaa — 10s"],
-    quads: ["1. Mirga Gubbaa", "2. Bitaa Gubbaa", "3. Bitaa Jalaa", "4. Mirga Jalaa"]
-  },
-  ti: {
-    dir: "ltr",
-    matcherBtn: "✨ መምረጺ ሜላ",
-    viewBuccal: "1. ደጋዊ ገጽን ውሽጢ ግርጭutን",
-    viewLingual: "2. ውሽጣዊ ቅድሚት ስኒ (ብቁመት)",
-    viewInterdental: "3. ኣብ መንጎ ኣስናን (ፈትሊ/ብሩሽ)",
-    pacerTitle: "⏱️ ናይ 2-ደቒቕ ሰዓት ምጽራይ ስኒ",
-    voiceToggle: "ድምጺ መምርሒ",
-    startBtn: "▶️ ናይ 2-ደቒቕ መደብ ጀምር",
-    pauseBtn: "⏸️ ደው ኣብል",
-    lockedBtn: "🚫 ጎዳኢ ኣገባብ — ሰዓት ተዓጽዩ",
-    surfaces: ["ደጋዊ ገጽ (Buccal) — 10 ካልኢት", "ውሽጣዊ ገጽ (Lingual) — 10 ካልኢት", "መሕየኺ ገጽ — 10 ካልኢት"],
-    quads: ["1. ላዕለዋይ የማን", "2. ላዕለዋይ ጸጋም", "3. ታሕተዋይ ጸጋም", "4. ታሕተዋይ የማን"]
-  },
-  ar: {
-    dir: "rtl",
-    matcherBtn: "✨ اختيار الطريقة",
-    viewBuccal: "1. السطح الخارجي ومكبر اللثة",
-    viewLingual: "2. السطح الداخلي الأمامي (عمودياً)",
-    viewInterdental: "3. التنظيف بين الأسنان (الخيط)",
-    pacerTitle: "⏱️ مؤقت التفريش الذكي (دقيقتان)",
-    voiceToggle: "التوجيه الصوتي",
-    startBtn: "▶️ ابدأ جلسة الدقيقتين",
-    pauseBtn: "⏸️ إيقاف مؤقت",
-    lockedBtn: "🚫 طريقة خاطئة — المؤقت معطل",
-    surfaces: ["السطح الخارجي — 10 ثوانٍ", "السطح الداخلي — 10 ثوانٍ", "سطح المضغ — 10 ثوانٍ"],
-    quads: ["1. العلوي الأيمن", "2. العلوي الأيسر", "3. السفلي الأيسر", "4. السفلي الأيمن"]
-  }
-};
-
-const METHODS = [
-  {
-    id: "bass",
-    color: "#0d9488",
-    angle: "45° Apical (Sulcular)",
-    timerAllowed: true,
-    i18n: {
+  <script>
+    /***************************************************************************
+     * 1. MULTILINGUAL UI DICTIONARY (EN, AM, OM, TI, AR)
+     ***************************************************************************/
+    const UI_LOCALE = {
       en: {
-        name: "1. Bass Method",
-        badge: "Gold Standard Sulcular",
-        indication: "Routine subgingival sulcus cleaning and interproximal plaque control for healthy adults.",
-        steps: [
-          "Place soft bristles at a 45° angle toward the root apex so bristle tips gently enter the gingival sulcus (0.5–1 mm).",
-          "Apply tiny horizontal/vibratory back-and-forth strokes (~15–20 counts) without dislodging the bristle tips.",
-          "For narrow inner front teeth, turn the brush vertically (Switch to View 2 above)."
-        ]
+        dir: 'ltr',
+        subtitle: 'Interactive Sulcular, Lingual & Interdental Biomechanics + 2-Min Clinical Pacer',
+        matcher: 'Matcher',
+        qrLink: 'QR Link',
+        pacerBtn: '2-Min Pacer',
+        viewBuccal: '1. Buccal + Loupe',
+        viewLingual: '2. Lingual Heel',
+        viewInterdental: '3. Interdental',
+        resetBiofilm: 'Reset Biofilm',
+        whyNotScrub: 'Why Not Scrub?',
+        backToModBass: 'Back to Modified Bass',
+        indicationHeader: 'Clinical Indication & Patient Profile',
+        stepsHeader: 'Synchronized Biomechanical Steps',
+        watchCueHeader: 'What to Watch in the Loupe & Stage:',
+        startPacerSidebar: 'Practice in 2-Min Guided Pacer',
+        disabledPacerSidebar: 'Timer Disabled — Horizontal Scrub Causes Trauma',
+        quadNames: ['Q1: Upper Right', 'Q2: Upper Left', 'Q3: Lower Left', 'Q4: Lower Right'],
+        surfNames: ['BUCCAL (OUTER)', 'LINGUAL (INNER)', 'OCCLUSAL (CHEWING)']
       },
       am: {
-        name: "1. የባስ ዘዴ (Bass)",
-        badge: "መደበኛ የድድ መስመር ጽዳት",
-        indication: "በጥርስ እና በድድ መካከል (Sulcus) የሚጠራቀመውን ፕላክ ለማስወገድ ለሁሉም አዋቂዎች የሚመከር።",
-        steps: [
-          "ለስላሳ የብሩሽ ጫፎችን ወደ ድድ መስመር በ45 ዲግሪ አዘንብለው በድድ ክፍተት (Sulcus) ውስጥ በትንሹ ያስገቡ።",
-          "የብሩሹን ጫፎች ከቦታቸው ሳያነሱ በጣም አጭር የንዝረት እንቅስቃሴ (15-20 ጊዜ) ያድርጉ።",
-          "ለፊት ጥርሶች የውስጥ ክፍል ብሩሹን በቁመት አዙረው ይጠቀሙ።"
-        ]
+        dir: 'ltr',
+        subtitle: 'የጥርስ እና የድድ መስመር አቦራረሽ ቴክኒኮች ማሳያ እና የ2-ደቂቃ ሰዓት መቆጣጠሪያ',
+        matcher: 'ዘዴ መምረጫ',
+        qrLink: 'QR ኮድ',
+        pacerBtn: 'የ2-ደቂቃ ሰዓት',
+        viewBuccal: '1. የውጭ + የድድ ዙም',
+        viewLingual: '2. የውስጥ የፊት ጥርስ',
+        viewInterdental: '3. በጥርሶች መካከል',
+        resetBiofilm: 'ፕላክ እንደገና አሳይ',
+        whyNotScrub: 'ለምን ወደ ጎን አይፈገፈግም?',
+        backToModBass: 'ወደ ተሻሻለው ባስ ተመለስ',
+        indicationHeader: 'ክሊኒካዊ ጥቅም እና ለማን እንደሚመከር',
+        stepsHeader: 'ደረጃ በደረጃ የአቦራረሽ መመሪያ',
+        watchCueHeader: 'በምስሉ ላይ ልብ የሚሉት ነጥብ፦',
+        startPacerSidebar: 'የ2-ደቂቃ የአቦራረሽ ሰዓት ጀምር',
+        disabledPacerSidebar: 'ሰዓት ተዘግቷል — ወደ ጎን መፈግፈግ ጥርስ ይጎዳል',
+        quadNames: ['Q1: ላይኛው ቀኝ', 'Q2: ላይኛው ግራ', 'Q3: ታችኛው ግራ', 'Q4: ታችኛው ቀኝ'],
+        surfNames: ['የውጭ ገጽታ (BUCCAL)', 'የውስጥ ገጽታ (LINGUAL)', 'መነከሻ ገጽታ (OCCLUSAL)']
       },
       om: {
-        name: "1. Mala Bass",
-        badge: "Istaandardii Qulqullina Irgoo",
-        indication: "Huuba ilkaanii fi irgoo jalaa (sulcus) qulqulleessuuf mala gaarii namoota گاهeeyyiif gorfamu.",
-        steps: [
-          "Rifeensa burushii laafaa kofoo 45° gara hidda ilkaaniitti qajeelchuun sulkasiitti galchaa.",
-          "Fiixee burushii osoo bakkaa hin buqqisin sochii hollachiisaa gabaabaa (si'a 15–20) raawwadhaa.",
-          "Ilkaan fuulduraa keessaaf burushii dhaabbataatti qabadhaa."
-        ]
+        dir: 'ltr',
+        subtitle: 'Mala Ilkaan Rigachuu Saayinsaawaa & Saatii Qajeelchaa Daqiiqaa 2',
+        matcher: 'Filannoo Malaa',
+        qrLink: 'QR Koodii',
+        pacerBtn: 'Saatii Daqiiqaa 2',
+        viewBuccal: '1. Fuula Alaa + Irgoo',
+        viewLingual: '2. Keessa Fuulduraa',
+        viewInterdental: '3. Gidduu Ilkaanii',
+        resetBiofilm: 'Huuba Haaromsi',
+        whyNotScrub: 'Maaliif Dalga Hin Rignu?',
+        backToModBass: 'Gara Modified Bass Deebi\'i',
+        indicationHeader: 'Faayidaa Kilinikaa & Eenyuuf Akka Ta\'u',
+        stepsHeader: 'Tartiiba Sochii Burushii',
+        watchCueHeader: 'Wanta Fakkii Irratti Hubatamu:',
+        startPacerSidebar: 'Saatii Qajeelchaa Daqiiqaa 2 Jalqabi',
+        disabledPacerSidebar: 'Saatiin Cufameera — Dalga Rigachuun Miidhaa Fida',
+        quadNames: ['Q1: Mirga Gubbaa', 'Q2: Bitaa Gubbaa', 'Q3: Bitaa Jalaa', 'Q4: Mirga Jalaa'],
+        surfNames: ['FUULA ALAA (BUCCAL)', 'FUULA KEESSAA (LINGUAL)', 'ALANFANNAA (OCCLUSAL)']
       },
       ti: {
-        name: "1. ሜላ ባስ (Bass)",
-        badge: "ወርቃዊ መዐቀኒ ጽሬት ግርጭት",
-        indication: "ኣብ ውሽጢ መስመር ግርጭት (Sulcus) ዝእከብ ፕላክ ንምውጋድ ንጥዑያት ዓበይቲ ዝምከር።",
-        steps: [
-          "ልሙጽ ጸጉሪ ብሩሽ ብ45 ዲግሪ ናብ መስመር ግርጭት ብምቕናዕ ጫፉ ናብ ውሽጢ ግርጭት የእትዉ።",
-          "ጫፍ ብሩሽ ካብ ቦትኡ ከይነቓነቐ ሓጺር ናይ ምንቅጥቃጥ ምንቅስቓስ ይግበሩ።",
-          "ንውሽጣዊ ቅድሚት ኣስናን ነቲ ብሩሽ ብቁመት ኣዙሮም ይጽረጉ።"
-        ]
+        dir: 'ltr',
+        subtitle: 'ሳይንሳዊ ኣገባብ ምጽራይ ስንን ናይ 2-ደቒቕ ሰዓት መቆጻጸርን',
+        matcher: 'መምረጺ ሜላ',
+        qrLink: 'QR ኮድ',
+        pacerBtn: 'ናይ 2-ደቒቕ ሰዓት',
+        viewBuccal: '1. ደጋዊ + ውሽጢ ግርጭት',
+        viewLingual: '2. ውሽጣዊ ቅድሚት ስኒ',
+        viewInterdental: '3. መንጎ ኣስናን',
+        resetBiofilm: 'ፕላክ ዳግም ኣርኢ',
+        whyNotScrub: 'ስለምንታይ ናብ ጎድኒ ዘይፍግፈግ?',
+        backToModBass: 'ናብ ሜላ ባስ ተመለስ',
+        indicationHeader: 'ክሊኒካዊ ጥቕምን ንመን ከም ዝምከርን',
+        stepsHeader: 'ደረጃ ብደረጃ ኣገባብ ምጽራይ',
+        watchCueHeader: 'ኣብቲ ስእሊ ዝረአ ቀንዲ ነጥቢ፦',
+        startPacerSidebar: 'ናይ 2-ደቒቕ መደብ ምጽራይ ጀምር',
+        disabledPacerSidebar: 'ሰዓት ተዓጽዩ — ናብ ጎድኒ ምፍግፋግ ስኒ ይጎድእ',
+        quadNames: ['Q1: ላዕለዋይ የማን', 'Q2: ላዕለዋይ ጸጋም', 'Q3: ታሕተዋይ ጸጋም', 'Q4: ታሕተዋይ የማን'],
+        surfNames: ['ደጋዊ ገጽ (BUCCAL)', 'ውሽጣዊ ገጽ (LINGUAL)', 'መሕየኺ ገጽ (OCCLUSAL)']
       },
       ar: {
-        name: "1. طريقة باس (Bass)",
-        badge: "المعيار الذهبي لتنظيف اللثة",
-        indication: "الطريقة القياسية لتنظيف الميزاب اللثوي وإزالة اللويحات الجرثومية للبالغين.",
-        steps: [
-          "ضع الشعيرات الناعمة بزاوية 45 درجة باتجاه اللثة بحيث تدخل أطراف الشعيرات برفق في الميزاب اللثوي.",
-          "قم بحركات اهتزازية قصيرة جداً دون إخراج أطراف الشعيرات من الميزاب.",
-          "للأسطح الداخلية للأسنان الأمامية، أمسك الفرشاة بشكل عمودي."
-        ]
+        dir: 'rtl',
+        subtitle: 'المحاكي الطبي لتقنيات تفريش الأسنان واللثة مع مؤقت الدقيقتين الذكي',
+        matcher: 'اختيار الطريقة',
+        qrLink: 'رمز QR',
+        pacerBtn: 'مؤقت الدقيقتين',
+        viewBuccal: '1. الخارجي ومكبر اللثة',
+        viewLingual: '2. الداخلي الأمامي عمودياً',
+        viewInterdental: '3. التنظيف بين الأسنان',
+        resetBiofilm: 'إعادة اللويحات',
+        whyNotScrub: 'لماذا نتجنب الفرك الأفقي؟',
+        backToModBass: 'العودة لطريقة باس المعدلة',
+        indicationHeader: 'الاستطباب السريري والفئة المستهدفة',
+        stepsHeader: 'خطوات التفريش المتزامنة',
+        watchCueHeader: 'ما يجب ملاحظته في العدسة المكبرة:',
+        startPacerSidebar: 'ابدأ جلسة الدقيقتين الموجهة',
+        disabledPacerSidebar: 'المؤقت معطل — الفرك الأفقي يسبب تآكل الأسنان',
+        quadNames: ['Q1: العلوي الأيمن', 'Q2: العلوي الأيسر', 'Q3: السفلي الأيسر', 'Q4: السفلي الأيمن'],
+        surfNames: ['السطح الخارجي (BUCCAL)', 'السطح الداخلي (LINGUAL)', 'سطح المضغ (OCCLUSAL)']
       }
-    }
-  },
-  {
-    id: "modified_bass",
-    color: "#0284c7",
-    angle: "45° Apical + Coronal Roll",
-    timerAllowed: true,
-    i18n: {
-      en: {
-        name: "2. Modified Bass",
-        badge: "Sulcus + Crown Sweep",
-        indication: "Combines intrasulcular plaque disruption with a coronal sweep to clear debris off the clinical crown.",
-        steps: [
-          "Phase 1: Angle bristles at 45° into the gingival sulcus and apply short vibratory strokes.",
-          "Phase 2: Roll/sweep the brush head coronally away from the gumline toward the biting edge."
-        ]
-      },
-      am: {
-        name: "2. የተሻሻለው የባስ ዘዴ",
-        badge: "የድድ ንዝረት + ወደ ጫፍ መጥረግ",
-        indication: "የድድ መስመር ጽዳትን ከጥርስ ገጽታ መጥረግ ጋር ያጣመረ እጅግ ውጤታማ ዘዴ።",
-        steps: [
-          "ደረጃ 1፦ ብሩሹን በ45 ዲግሪ ወደ ድድ መስመር አስገብተው በቀስታ ያርገbgቡ።",
-          "ደረጃ 2፦ ከዚያም ብሩሹን ከድድ ወደ ጥርሱ መነከሻ ጫፍ ወደ ታች/ወደ ላይ ይጥረጉ።"
-        ]
-      },
-      om: {
-        name: "2. Modified Bass",
-        badge: "Irgoo + Haxaa'uu Ilkaanii",
-        indication: "Qulqullina irgoo jalaa fi fuula ilkaanii haxaa'uu walitti qaba.",
-        steps: [
-          "Sadarkaa 1: Kofoo 45° sulkasiitti qajeelchuun sochii hollachiisaa gabaabaa godhaa.",
-          "Sadarkaa 2: Itti aansuun irgoo irraa gara fiixee ciniinnaatti burushii naannessaa haxaa'aa."
-        ]
-      },
-      ti: {
-        name: "2. ዝተመሓየሸ ሜላ ባስ",
-        badge: "ውሽጢ ግርጭት + ምጽራግ ገጽ ስኒ",
-        indication: "ጽሬት ውሽጢ ግርጭት ምስ ምጽራግ ገጽ ስኒ ዘወሃሃደ ሜላ።",
-        steps: [
-          "ቀዳማይ፦ ብ45 ዲግሪ ኣብ መስመር ግርጭት ሓጺር ምንቅጥቃጥ ይግበሩ።",
-          "ካልኣይ፦ ካብ ግርጭት ናብ መሕየኺ ጫፍ ስኒ ገጾም ብሩሽ ይጥምዝዙ/ይጽረጉ።"
-        ]
-      },
-      ar: {
-        name: "2. طريقة باس المعدلة",
-        badge: "تنظيف اللثة + مسح التاج",
-        indication: "تجمع بين تنظيف الميزاب اللثوي ومسح سطح السن لإزالة البلاك المتفكك.",
-        steps: [
-          "المرحلة 1: زاوية 45 درجة داخل الميزاب اللثوي مع اهتزاز لطيف.",
-          "المرحلة 2: لف رأس الفرشاة باتجاه السطح القاطع أو الطاحن للسن."
-        ]
-      }
-    }
-  },
-  {
-    id: "modified_stillman",
-    color: "#7c3aed",
-    angle: "45° Apical (On Attached Gingiva)",
-    timerAllowed: true,
-    i18n: {
-      en: {
-        name: "3. Modified Stillman's",
-        badge: "Recession & Root Protection",
-        indication: "Ideal for progressive gingival recession and exposed root surfaces; stimulates gums without sulcus trauma.",
-        steps: [
-          "Place bristles obliquely partly on the attached gingiva and partly on the cervical tooth neck (do NOT enter sulcus).",
-          "Apply light lateral pressure to create slight tissue blanching (momentary paling), then vibrate and roll coronally."
-        ]
-      },
-      am: {
-        name: "3. የስቲልማን ዘዴ (Stillman's)",
-        badge: "ለሸሸ ድድ እና ለተጋለጠ ሥር",
-        indication: "የድድ መሸሽ (Recession) እና የጥርስ ሥር መጋለጥ ላለባቸው ታካሚዎች ተጨማሪ ጉዳት እንዳይደርስ ይረዳል።",
-        steps: [
-          "ብሩሹን በከፊል በድድ ላይ እና በከፊል በጥርሱ አንገት ላይ ያሳርፉ (ወደ ድድ ክፍተት ውስጥ አያስገቡ)።",
-          "ድዱ በትንሹ እስኪነጣ (Blanching) መጠነኛ ግፊት አድርገው በንዝረት ወደ ጥርሱ ጫፍ ያንከባልሉ።"
-        ]
-      },
-      om: {
-        name: "3. Mala Stillman Fooyya'e",
-        badge: "Irgoo Dheensaa & Hidda Mul'ateef",
-        indication: "Namoota irgoon isaanii گاد-siqe (recession) fi hiddi ilkaanii mul'ateef miidhaa dabalataa ittisa.",
-        steps: [
-          "Burushii walakkaa irgoo irratti, walakkaa ammoo morma ilkaanii irratti kaa'aa.",
-          "Dhiibbaa salphaan irgoon hanga xiqqoo addaatuutti (blanching) qabaa, achiis gara fiixeetti naannessaa."
-        ]
-      },
-      ti: {
-        name: "3. ሜላ ስቲልማን (Stillman's)",
-        badge: "ንዝሃደመ ግርጭትን ሱር ስንን",
-        indication: "ምህዳም ግርጭት (Recession) ንዘለዎም ሕሙማት ተወሳኺ ማህሰይቲ ከይወርድ ይከላኸል።",
-        steps: [
-          "ጸጉሪ ብሩሽ ብኸፊል ኣብ ልዕሊ ግርጭትን ክሳድ ስንን የዕርፉ።",
-          "ግርጭት ብቕሩብ ክሳብ ዝጻዕዱ (Blanching) ፈኲስ ጸቕጢ ብምግባር ናብ ጫፍ ስኒ ይጥምዝዙ።"
-        ]
-      },
-      ar: {
-        name: "3. طريقة ستلمان المعدلة",
-        badge: "حماية انحسار اللثة والجذور",
-        indication: "مثالية للمرضى الذين يعانون من انحسار اللثة وانكشاف الجذور لمنع تآكل الأنسجة.",
-        steps: [
-          "ضع الشعيرات جزئياً على اللثة الملتصقة وجزئياً على عنق السن دون الدخول في الميزاب.",
-          "اضغط برفق حتى يبيض لون اللثة قليلاً ثم اهتز ولف الفرشاة باتجاه التاج."
-        ]
-      }
-    }
-  },
-  {
-    id: "charters",
-    color: "#4f46e5",
-    angle: "45° Coronal (Reverse Angle)",
-    timerAllowed: true,
-    i18n: {
-      en: {
-        name: "4. Charter's Method",
-        badge: "Braces, Bridges & Post-Op",
-        indication: "Designed for orthodontic brackets/archwires, fixed bridges, open interdental spaces, and healing surgical sites.",
-        steps: [
-          "Angle bristles 45° coronally (pointing toward the biting surface — opposite of Bass).",
-          "Slide bristle tips underneath orthodontic archwires or bridge pontics and apply short rotary vibrations."
-        ]
-      },
-      am: {
-        name: "4. የቻርተር ዘዴ (Charter's)",
-        badge: "ለብሬስ (Braces) እና ድልድይ ጥርስ",
-        indication: "የጥርስ ብሬስ (Orthodontic braces)፣ የተተከለ ድልድይ (Bridge) ወይም የድድ ቀዶ ጥገና ላደረጉ ታካሚዎች።",
-        steps: [
-          "ብሩሹን ከባስ ዘዴ በተቃራኒ በ45 ዲግሪ ወደ ጥርሱ መነከሻ ጫፍ ያዘንብሉ።",
-          "የብሩሹን ጫፎች ከብሬሱ ሽቦ (Archwire) ስር በማስገባት በአጭር ክብ ንዝረት ያጽዱ።"
-        ]
-      },
-      om: {
-        name: "4. Mala Charter's",
-        badge: "Warra Braces & Riqicha Qabaniif",
-        indication: "Namoota sibiila ilkaanii (braces), riqicha ilkaanii (bridge) ykn madaa baqaqsanii hodhuu qabaniif.",
-        steps: [
-          "Burushii kofoo 45° gara fiixee ciniinnaatti (faallaa Bass) qajeelchaa.",
-          "Fiixee burushii shiboo braces jala galchuun sochii naannoo gabaabaan qulqulleessaa."
-        ]
-      },
-      ti: {
-        name: "4. ሜላ ቻርተር (Charter's)",
-        badge: "ንብሬስ (Braces)ን ድልድል ስንን",
-        indication: "ብሬስ ስኒ፣ ተተካኢ ድልድል (Bridge) ወይ ድሕሪ መጥባሕቲ ግርጭት ንዘለዉ ሕሙማት።",
-        steps: [
-          "ብሩሽ ብ45 ዲግሪ ናብ መሕየኺ ጫፍ ስኒ (ኣንጻር ሜላ ባስ) የዘንብሉ።",
-          "ጫፍ ብሩሽ ኣብ ትሕቲ ሽቦ ብሬስ ብምእታው ብሓጺር ዘዋሪ ምንቅጥቃጥ የጽርዩ።"
-        ]
-      },
-      ar: {
-        name: "4. طريقة تشارتر (Charter's)",
-        badge: "لتقويم الأسنان والجسور",
-        indication: "مخصصة لمرضى تقويم الأسنان (الحاصرات والأسلاك) والجسور الثابتة وبعد جراحات اللثة.",
-        steps: [
-          "وجه الشعيرات بزاوية 45 درجة باتجاه السطح الطاحن (عكس طريقة باس).",
-          "أدخل أطراف الشعيرات تحت سلك التقويم وحركها بحركات اهتزازية دائرية قصيرة."
-        ]
-      }
-    }
-  },
-  {
-    id: "fones",
-    color: "#d97706",
-    angle: "90° Perpendicular Circular",
-    timerAllowed: true,
-    i18n: {
-      en: {
-        name: "5. Fones (Circular)",
-        badge: "Pediatric & Easy Dexterity",
-        indication: "Primary method for young children or individuals with limited manual dexterity.",
-        steps: [
-          "Close upper and lower teeth gently together in occlusion.",
-          "Place bristles at 90° and trace wide, continuous circular loops across upper and lower teeth and gums."
-        ]
-      },
-      am: {
-        name: "5. የፎንስ ክብ ዘዴ (Fones)",
-        badge: "ለህጻናት እና ለቀላል አያያዝ",
-        indication: "ለህጻናት ወይም እጃቸውን በቀላሉ ማንቀሳቀስ ለሚቸገሩ ሰዎች በቀላሉ የሚለመድ ዘዴ።",
-        steps: [
-          "የላይ እና የታች ጥርሶችን በቀስታ አንድ ላይ ይንከሱ።",
-          "ብሩሹን በ90 ዲግሪ አስቀምጠው የላይ እና የታች ጥርሶችን በአንድነት በትልልቅ ክብ እንቅስቃሴ ይቦርሹ።"
-        ]
-      },
-      om: {
-        name: "5. Mala Fones (Geengoo)",
-        badge: "Daa'immaniif Salphaa",
-        indication: "Daa'imman xixiqqoo ykn namoota harka salphaatti sochoosuu hin dandeenyeef.",
-        steps: [
-          "Ilkaan gubbaa fi jalaa suuta walitti ciniinaa.",
-          "Burushii 90° kaa'uun sochii geengoo گودdaa ilkaan gubbaa fi jalaa irratti naannessaa."
-        ]
-      },
-      ti: {
-        name: "5. ሜላ ፎንስ (ክብ ዙርያ)",
-        badge: "ንህጻናትን ቀሊል ኣተሓሕዛን",
-        indication: "ንህጻናት ወይ ምንቅስቓስ ኢድ ንዝሽገሩ ሰባት ብቐሊሉ ዝለመድ ሜላ።",
-        steps: [
-          "ላዕለዋይን ታሕተዋይን ኣስናን ብህድኣት ኣተሓሒዞም ይንከሱ።",
-          "ብሩሽ ብ90 ዲግሪ ኣቐሚጦም ብሰፊሕ ክብ ምንቅስቓስ ክልቲኡ መንጋጋ ብሓንሳብ ይጽረጉ።"
-        ]
-      },
-      ar: {
-        name: "5. طريقة فونز الدائرية (Fones)",
-        badge: "للأطفال وسهولة الحركة",
-        indication: "الطريقة الأساسية للأطفال الصغار أو ذوي المهارات الحركية المحدودة.",
-        steps: [
-          "أطبق الأسنان العلوية والسفلية معاً برفق.",
-          "ضع الفرشاة بزاوية 90 درجة وقم بحركات دائرية واسعة تشمل الأسنان العلوية والسفلية معاً."
-        ]
-      }
-    }
-  },
-  {
-    id: "horizontal_scrub",
-    color: "#dc2626",
-    angle: "90° Aggressive Horizontal Sawing",
-    timerAllowed: false,
-    i18n: {
-      en: {
-        name: "6. Horizontal Scrub (AVOID)",
-        badge: "⚠️ Causes Abrasion & Recession",
-        indication: "CONTRAINDICATED HABIT: Shown as a clinical warning. Leaves interproximal plaque untouched while sawing V-shaped notches into roots.",
-        steps: [
-          "WARNING: Scrubbing flat back-and-forth skips the interdental concavities where plaque hides.",
-          "Drag the red Time-Lapse Slider below the video to see 5-year progressive cervical enamel abrasion and gum recession."
-        ]
-      },
-      am: {
-        name: "6. ወደ ጎን መፈግፈግ (ይቆጠቡ!)",
-        badge: "⚠️ ጥርስ ይበላል / ድድ ይሸሻል",
-        indication: "የተሳሳተ ልምድ፦ በጥርሶች መካከል ያለውን ቆሻሻ አያጸዳም፤ በተጨማሪም የጥርስ አንገትን ይቦረቡራል (Cervical Abrasion)።",
-        steps: [
-          "ማስጠንቀቂያ፦ ብሩሹን ወደ ጎን በኃይል መፈግፈግ ድድን ወደ ኋላ ይገፋል።",
-          "ከቪዲዮው ስር ያለውን ቀይ መንሸራተቻ (Slider) በመጎተት በ5 ዓመት ውስጥ የሚፈጠረውን የጥርስ መቦርቦር ይመልከቱ።"
-        ]
-      },
-      om: {
-        name: "6. Dalga Rigachuu (DHIISAA!)",
-        badge: "⚠️ Ilkaan Nyaata / Irgoo Miidha",
-        indication: "BARTee DOGOGGORAA: Gidduu ilkaanii hin qulqulleessu; morma ilkaanii nyaachuun irgoo gara duubaatti dhiiba.",
-        steps: [
-          "Ofeeggannoo: Burushii dalga humnaan rigachuun morma ilkaanii قوqqora.",
-          "Slider diimaa suuraa jala jiru sochoosuun miidhaa waggaa 5 keessatti dhufu ilaalaa."
-        ]
-      },
-      ti: {
-        name: "6. ናብ ጎድኒ ምፍግፋግ (ኣይትጠቐሙ!)",
-        badge: "⚠️ ስኒ ይበልዕን ግርጭት የህድምን",
-        indication: "ግጉይ ልምዲ፦ ኣብ መንጎ ኣስናን ዘሎ ርስሓት ኣየጽርን፤ ክሳድ ስኒ ይፍሕርን ግርጭት የህድምን።",
-        steps: [
-          "መጠንቀቕታ፦ ብሩሽ ናብ ጎድኒ ብሓይሊ ምፍግፋግ ንክሳድ ስኒ ይጎድኦ።",
-          "ኣብ ትሕቲ ቪድዮ ዘሎ ቀይሕ መንሸራተቲ ብምስሓብ ኣብ 5 ዓመት ዝፍጠር ጉድኣት ርኣዩ።"
-        ]
-      },
-      ar: {
-        name: "6. الفرك الأفقي العنيف (تجنبه!)",
-        badge: "⚠️ يسبب تآكل العنق وانحسار اللثة",
-        indication: "عادة خاطئة شائعة: تفشل في تنظيف المسافات بين الأسنان وتسبب تآكلاً عنقياً وانحساراً في اللثة.",
-        steps: [
-          "تحذير: الفرك الأفقي السريع يتخطى المناطق البينية ويحفر أعناق الأسنان.",
-          "حرك شريط التمرير الأحمر أسفل العرض لرؤية تطور تآكل السن وانحسار اللثة خلال 5 سنوات."
-        ]
-      }
-    }
-  }
-];
-
-/* ============================================================================
-   2. STATE & URL DEEP-LINKING INITIALIZATION
-   ============================================================================ */
-let currentLang = "en";
-let currentMethodIndex = 0;
-let currentViewMode = "buccal"; // "buccal" | "lingual" | "interdental"
-let isSlowMo = false;
-let damageYears = 2.5;
-let animTick = 0;
-
-// Parse URL params (?method=charters&lang=am)
-const params = new URLSearchParams(window.location.search);
-if (params.get("lang") && UI_STRINGS[params.get("lang")]) {
-  currentLang = params.get("lang");
-  document.getElementById("langSelect").value = currentLang;
-}
-if (params.get("method")) {
-  const foundIdx = METHODS.findIndex(m => m.id === params.get("method"));
-  if (foundIdx !== -1) currentMethodIndex = foundIdx;
-}
-
-// Load Streak
-let streakCount = parseInt(localStorage.getItem("dentguide_streak") || "0", 10);
-document.getElementById("streakBadge").textContent = `🔥 ${streakCount}`;
-
-// Telegram Mini App Init
-if (window.Telegram && window.Telegram.WebApp) {
-  window.Telegram.WebApp.ready();
-  window.Telegram.WebApp.expand();
-}
-
-/* ============================================================================
-   3. UI RENDERING & MULTILINGUAL SWITCHING
-   ============================================================================ */
-function renderUI() {
-  const ui = UI_STRINGS[currentLang];
-  const method = METHODS[currentMethodIndex];
-  const loc = method.i18n[currentLang];
-
-  document.documentElement.lang = currentLang;
-  document.documentElement.dir = ui.dir;
-
-  document.getElementById("btnTriage").textContent = ui.matcherBtn;
-  document.getElementById("viewBuccal").textContent = ui.viewBuccal;
-  document.getElementById("viewLingual").textContent = ui.viewLingual;
-  document.getElementById("viewInterdental").textContent = ui.viewInterdental;
-  document.getElementById("lblPacerTitle").textContent = ui.pacerTitle;
-  document.getElementById("lblVoiceToggle").textContent = ui.voiceToggle;
-
-  // Render Method Bar
-  const bar = document.getElementById("methodBar");
-  bar.innerHTML = "";
-  METHODS.forEach((m, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "method-tab" + (idx === currentMethodIndex ? " active" : "") + (m.id === "horizontal_scrub" ? " danger-tab" : "");
-    btn.textContent = m.i18n[currentLang].name;
-    btn.onclick = () => {
-      currentMethodIndex = idx;
-      renderUI();
     };
-    bar.appendChild(btn);
-  });
 
-  // Render Clinical Card
-  document.getElementById("techTitle").textContent = loc.name;
-  document.getElementById("techTitle").style.color = method.color;
-  document.getElementById("badgeAngle").textContent = `📐 ${method.angle}`;
-  document.getElementById("badgeCategory").textContent = loc.badge;
-  document.getElementById("techIndication").textContent = loc.indication;
+    const TECHNIQUES = [
+      {
+        id: 'bass',
+        number: 1,
+        themeHex: '#0D9488',
+        angleText: '45° Apical (Sulcus)',
+        motionText: 'Short Vibratory (1–2mm)',
+        pressureText: 'Light (~150g)',
+        timerEnabled: true,
+        phaseLabels: ['Phase 1: 45° Sulcular Insertion', 'Phase 2: Intrasulcular Micro-Vibration'],
+        i18n: {
+          en: {
+            shortName: '1. Bass Method',
+            name: 'Bass Method (Intrasulcular)',
+            categoryTag: 'INTRASULCULAR GOLD STANDARD',
+            badge: 'Gold Standard',
+            indication: 'The standard, most widely recommended method for routine sulcular cleaning and interproximal plaque removal in healthy adults and patients with gingivitis.',
+            animationCue: 'Zoom in on the gumline; notice the soft bristle ends entering 0.5–1mm directly into the gingival crevice with subtle horizontal vibrations without dislodging the tips.',
+            steps: [
+              { title: '45° Apical Sulcular Placement', desc: 'Place soft bristles at a 45-degree angle to the long axis of the tooth, directed apically directly into the gingival sulcus.', phaseRange: [0.0, 0.35] },
+              { title: 'Anchored Vibratory Strokes', desc: 'Apply gentle, short vibratory back-and-forth strokes (~1–2mm) for 15–20 counts without dislodging the bristle tips from the sulcus.', phaseRange: [0.35, 0.75] },
+              { title: 'Vertical Heel on Lingual Anterior', desc: 'For narrow inner front teeth, switch to View 2 above and hold the brush vertically so the heel engages the lingual sulcus.', phaseRange: [0.75, 1.0] }
+            ]
+          },
+          am: {
+            shortName: '1. የባስ ዘዴ (Bass)',
+            name: 'የባስ ዘዴ (Bass Intrasulcular)',
+            categoryTag: 'መደበኛ የድድ መስመር ጽዳት',
+            badge: 'ወርቃማ መደበኛ ዘዴ',
+            indication: 'በጥርስ እና በድድ መካከል (Sulcus) የሚጠራቀመውን ፕላክ ለማስወገድ ለሁሉም አዋቂዎች እና ለድድ መድማት ህክምና የሚመከር።',
+            animationCue: 'በቀኝ በኩል ባለው የድድ ዙም (Loupe) ላይ የብሩሹ ጫፎች በ45 ዲግሪ ወደ ድድ ክፍተት (0.5–1 ሚ.ሜ) ገብተው ከቦታቸው ሳይነቃነቁ ሲያርገbgቡ ይመልከቱ።',
+            steps: [
+              { title: 'በ45° ወደ ድድ መስመር ማስቀመጥ', desc: 'ለስላሳ የብሩሽ ጫፎችን ወደ ድድ መስመር በ45 ዲግሪ አዘንብለው በድድ ክፍተት (Sulcus) ውስጥ በትንሹ ያስገቡ።', phaseRange: [0.0, 0.35] },
+              { title: 'አጭር የንዝረት እንቅስቃሴ', desc: 'የብሩሹን ጫፎች ከቦታቸው ሳያነሱ በጣም አጭር የንዝረት እንቅስቃሴ (15-20 ጊዜ) ያድርጉ።', phaseRange: [0.35, 0.75] },
+              { title: 'የፊት ጥርሶች የውስጥ ገጽታ (በቁመት)', desc: 'ለፊት ጥርሶች የውስጥ ክፍል (View 2 ይጫኑ) ብሩሹን በቁመት አዙረው ይጠቀሙ።', phaseRange: [0.75, 1.0] }
+            ]
+          },
+          om: {
+            shortName: '1. Mala Bass',
+            name: 'Mala Bass (Intrasulcular)',
+            categoryTag: 'ISTAANDARDII QULQULLINA IRGOO',
+            badge: 'Mala Filatamaa',
+            indication: 'Huuba ilkaanii (plaque) sulkasii irgoo keessaa fi gidduu ilkaanii qulqulleessuuf mala gaarii namoota gaa\'eeyyiif gorfamu.',
+            animationCue: 'Ilaalcha Loupe mirgaa irratti fiixeen burushii kofoo 45°n sulkasii irgoo (0.5–1mm) seenuun osoo bakkaa hin buqqisin yeroo hollatu ilaalaa.',
+            steps: [
+              { title: 'Kofoo 45° Irgootti Qajeelchuu', desc: 'Rifeensa burushii laafaa kofoo 45° gara hidda ilkaaniitti qajeelchuun sulkasiitti galchaa.', phaseRange: [0.0, 0.35] },
+              { title: 'Sochii Hollachiisaa Gabaabaa', desc: 'Fiixee burushii osoo bakkaa hin buqqisin sochii hollachiisaa gabaabaa (si\'a 15–20) godhaa.', phaseRange: [0.35, 0.75] },
+              { title: 'Ilkaan Fuulduraa Keessaa (View 2)', desc: 'Ilkaan fuulduraa keessaaf burushii dhaabbataatti qabachuun qulqulleessaa.', phaseRange: [0.75, 1.0] }
+            ]
+          },
+          ti: {
+            shortName: '1. ሜላ ባስ (Bass)',
+            name: 'ሜላ ባስ (Intrasulcular)',
+            categoryTag: 'ወርቃዊ መዐቀኒ ጽሬት ግርጭት',
+            badge: 'ቀዳማይ ምርጫ',
+            indication: 'ኣብ ውሽጢ መስመር ግርጭት (Sulcus) ዝእከብ ፕላክ ንምውጋድ ንጥዑያት ዓበይቲ ዝምከር ሜላ።',
+            animationCue: 'ኣብ የማናይ ወገን ዘሎ ዙም (Loupe) ጫፍ ብሩሽ ብ45 ዲግሪ ናብ ውሽጢ ግርጭት ኣትዩ ከይነቓነቐ ክንቅጥቀጥ ከሎ ርኣዩ።',
+            steps: [
+              { title: 'ብ45° ናብ መስመር ግርጭት ምእታው', desc: 'ልሙጽ ጸጉሪ ብሩሽ ብ45 ዲግሪ ናብ መስመር ግርጭት ብምቕናዕ ጫፉ ናብ ውሽጢ ግርጭት የእትዉ።', phaseRange: [0.0, 0.35] },
+              { title: 'ሓጺር ናይ ምንቅጥቃጥ ምንቅስቓስ', desc: 'ጫፍ ብሩሽ ካብ ቦትኡ ከይነቓነቐ ሓጺር ናይ ምንቅጥቃጥ ምንቅስቓስ ይግበሩ።', phaseRange: [0.35, 0.75] },
+              { title: 'ውሽጣዊ ቅድሚት ስኒ (ብቁመት)', desc: 'ንውሽጣዊ ቅድሚት ኣስናን ነቲ ብሩሽ ብቁመት ኣዙሮም ይጽረጉ።', phaseRange: [0.75, 1.0] }
+            ]
+          },
+          ar: {
+            shortName: '1. طريقة باس (Bass)',
+            name: 'طريقة باس (داخل الميزاب اللثوي)',
+            categoryTag: 'المعيار الذهبي لتنظيف اللثة',
+            badge: 'المعيار الذهبي',
+            indication: 'الطريقة القياسية الأكثر توصية لتنظيف الميزاب اللثوي وإزالة اللويحات الجرثومية للبالغين وعلاج التهاب اللثة.',
+            animationCue: 'لاحظ في العدسة المكبرة دخول أطراف الشعيرات مسافة 0.5 إلى 1 ملم داخل الميزاب اللثوي بزاوية 45 درجة مع اهتزازات دقيقة.',
+            steps: [
+              { title: 'توجيه الشعيرات بزاوية 45 درجة', desc: 'ضع الشعيرات الناعمة بزاوية 45 درجة باتجاه جذر السن بحيث تدخل الأطراف برفق في الميزاب اللثوي.', phaseRange: [0.0, 0.35] },
+              { title: 'حركات اهتزازية قصيرة', desc: 'قم بحركات اهتزازية قصيرة جداً (1-2 ملم) دون إخراج أطراف الشعيرات من الميزاب.', phaseRange: [0.35, 0.75] },
+              { title: 'الوضع العمودي للأسنان الأمامية', desc: 'للأسطح الداخلية للأسنان الأمامية، أمسك الفرشاة بشكل عمودي لتنظيف الميزاب الضيق.', phaseRange: [0.75, 1.0] }
+            ]
+          }
+        }
+      },
+      {
+        id: 'modified_bass',
+        number: 2,
+        themeHex: '#0284C7',
+        angleText: '45° Apical + Roll',
+        motionText: 'Vibrate → Coronal Sweep',
+        pressureText: 'Light–Moderate',
+        timerEnabled: true,
+        phaseLabels: ['Phase 1: 45° Sulcular Vibration', 'Phase 2: Coronal Crown Sweep'],
+        i18n: {
+          en: {
+            shortName: '2. Modified Bass',
+            name: 'Modified Bass Method',
+            categoryTag: 'SULCUS + CORONAL SWEEP',
+            badge: 'Sulcus + Crown Sweep',
+            indication: 'Combines intrasulcular debridement with crown surface sweeping to clear dislodged subgingival plaque across the entire clinical crown.',
+            animationCue: 'Observe the synchronized 2-part cycle: first, 45° intrasulcular vibratory jiggling (Phase 1) to loosen crevice biofilm, followed by a smooth sweeping arc toward the biting edge (Phase 2).',
+            steps: [
+              { title: 'Phase 1: 45° Intrasulcular Vibration', desc: 'Begin with the 45-degree intrasulcular vibratory motion of the Bass technique so bristle tips agitate plaque inside the gingival sulcus.', phaseRange: [0.0, 0.50] },
+              { title: 'Phase 2: Coronal Wrist Roll & Sweep', desc: 'Roll the brush head down over the crown on upper teeth—or up on lower teeth—sweeping dislodged plaque toward the biting surface.', phaseRange: [0.50, 1.0] }
+            ]
+          },
+          am: {
+            shortName: '2. የተሻሻለው ባስ',
+            name: 'የተሻሻለው የባስ ዘዴ (Modified Bass)',
+            categoryTag: 'የድድ ንዝረት + የጥርስ ገጽታ መጥረግ',
+            badge: 'ድድ + ጥርስ መጥረግ',
+            indication: 'የድድ መስመር ጽዳትን ከጥርስ ገጽታ መጥረግ ጋር ያጣመረ እጅግ ውጤታማ የአዋቂዎች አቦራረሽ ዘዴ።',
+            animationCue: 'ሁለት ተከታታይ እንቅስቃሴዎችን ይመልከቱ፦ መጀመሪያ በ45° የድድ መስመር ንዝረት (Phase 1)፣ ቀጥሎም ወደ ጥርሱ መነከሻ ጫፍ መጥረግ (Phase 2)።',
+            steps: [
+              { title: 'ደረጃ 1፦ በ45° የድድ መስመር ንዝረት', desc: 'ልክ እንደ መደበኛው የባስ ዘዴ ብሩሹን በ45 ዲግሪ ወደ ድድ መስመር አስገብተው በቀስታ ያርገብግቡ።', phaseRange: [0.0, 0.50] },
+              { title: 'ደረጃ 2፦ ወደ መነከሻው ጫፍ መጥረግ', desc: 'ከጥቂት ንዝረት በኋላ ብሩሹን ከድድ ተነስተው ወደ ጥርሱ መነከሻ ጫፍ (ወደ ታች/ወደ ላይ) ይጥረጉ።', phaseRange: [0.50, 1.0] }
+            ]
+          },
+          om: {
+            shortName: '2. Modified Bass',
+            name: 'Mala Modified Bass',
+            categoryTag: 'IRGOO + FUULA ILKAANII HAXAA\'UU',
+            badge: 'Irgoo + Haxaa\'uu',
+            indication: 'Qulqullina sulkasii irgoo jalaa fi fuula ilkaanii haxaa\'uu walitti qabuun huuba ilkaanii guutummaatti qulqulleessa.',
+            animationCue: 'Marsaa lamaan ilaalaa: dura kofoo 45°n sulkasii keessatti hollachiisuu (Marsaa 1), itti aansuun gara fiixee ciniinnaatti haxaa\'uu (Marsaa 2).',
+            steps: [
+              { title: 'Marsaa 1: Hollachiisa Sulkasii 45°', desc: 'Kofoo 45° sulkasiitti qajeelchuun sochii hollachiisaa gabaabaa raawwadhaa.', phaseRange: [0.0, 0.50] },
+              { title: 'Marsaa 2: Gara Fiixeetti Haxaa\'uu', desc: 'Irgoo irraa gara fiixee ciniinnaatti burushii naannessaa haxaa\'aa.', phaseRange: [0.50, 1.0] }
+            ]
+          },
+          ti: {
+            shortName: '2. ዝተመሓየሸ ባስ',
+            name: 'ዝተመሓየሸ ሜላ ባስ (Modified Bass)',
+            categoryTag: 'ውሽጢ ግርጭት + ምጽራግ ገጽ ስኒ',
+            badge: 'ግርጭት + ገጽ ስኒ',
+            indication: 'ጽሬት ውሽጢ ግርጭት ምስ ምጽራግ ገጽ ስኒ ዘወሃሃደ ኣዚዩ ውጽኢታዊ ሜላ።',
+            animationCue: 'ክልተ ተኸታተልቲ ምንቅስቓሳት ርኣዩ፦ ቀዳማይ ብ45° ኣብ መስመር ግርጭት ምንቅጥቃጥ፣ ካልኣይ ናብ መሕየኺ ጫፍ ስኒ ምጽራግ።',
+            steps: [
+              { title: 'ቀዳማይ፦ ብ45° ኣብ ግርጭት ምንቅጥቃጥ', desc: 'ብ45 ዲግሪ ኣብ መስመር ግርጭት ሓጺር ምንቅጥቃጥ ይግበሩ።', phaseRange: [0.0, 0.50] },
+              { title: 'ካልኣይ፦ ናብ መሕየኺ ጫፍ ምጽራግ', desc: 'ካብ ግርጭት ተበጊሶም ናብ መሕየኺ ጫፍ ስኒ ገጾም ብሩሽ ይጥምዝዙ/ይጽረጉ።', phaseRange: [0.50, 1.0] }
+            ]
+          },
+          ar: {
+            shortName: '2. باس المعدلة',
+            name: 'طريقة باس المعدلة (Modified Bass)',
+            categoryTag: 'تنظيف الميزاب + مسح التاج',
+            badge: 'اللثة + مسح التاج',
+            indication: 'تجمع بين تنظيف الميزاب اللثوي ومسح سطح التاج لإزالة اللويحات المتفككة بالكامل.',
+            animationCue: 'لاحظ الحركة المكونة من مرحلتين: اهتزاز بزاوية 45 درجة داخل الميزاب (المرحلة 1) متبوعاً بمسح نحو السطح القاطع (المرحلة 2).',
+            steps: [
+              { title: 'المرحلة 1: اهتزاز داخل الميزاب 45°', desc: 'ابدأ بوضع الشعيرات بزاوية 45 درجة داخل الميزاب اللثوي مع اهتزاز لطيف.', phaseRange: [0.0, 0.50] },
+              { title: 'المرحلة 2: المسح باتجاه التاج', desc: 'لف رأس الفرشاة باتجاه السطح القاطع أو الطاحن لطرد البلاك المتفكك.', phaseRange: [0.50, 1.0] }
+            ]
+          }
+        }
+      },
+      {
+        id: 'modified_stillman',
+        number: 3,
+        themeHex: '#7C3AED',
+        angleText: '45° Apical (On Gingiva)',
+        motionText: 'Blanching Vibrate + Roll',
+        pressureText: 'Firm Lateral (Blanching)',
+        timerEnabled: true,
+        phaseLabels: ['Phase 1: Gingival Blanching & Vibration', 'Phase 2: Protective Coronal Roll'],
+        i18n: {
+          en: {
+            shortName: "3. Modified Stillman's",
+            name: "Modified Stillman's Method",
+            categoryTag: 'GINGIVAL RECESSION & ROOT PROTECTION',
+            badge: 'Gum Recession Care',
+            indication: 'Ideal for patients with progressive gingival recession and exposed root cementum to prevent abrasive sulcular tissue injury while massaging and stimulating the attached gingiva.',
+            animationCue: 'Notice the receded gumline with exposed yellow-tinted root cementum. Bristles rest partly on the attached gingiva and cervical tooth (NOT entering the sulcus), causing brief pale tissue blanching before rolling coronally.',
+            steps: [
+              { title: 'Oblique Gingival-Cervical Placement', desc: 'Place bristles obliquely (45° apically) resting partly on the attached gingival tissue and partly on the cervical root/tooth—avoid entering the sulcus.', phaseRange: [0.0, 0.35] },
+              { title: 'Tissue Blanching & Micro-Vibration', desc: 'Apply gentle lateral pressure until the gum tissue visibly blanches (turns slightly pale), activating a short vibratory motion to stimulate circulation.', phaseRange: [0.35, 0.65] },
+              { title: 'Simultaneous Coronal Roll', desc: 'Roll the brush head coronally down the exposed root and crown toward the occlusal edge without scrubbing horizontally.', phaseRange: [0.65, 1.0] }
+            ]
+          },
+          am: {
+            shortName: "3. የስቲልማን ዘዴ",
+            name: "የተሻሻለው የስቲልማን ዘዴ (Stillman's)",
+            categoryTag: 'ለሸሸ ድድ እና ለተጋለጠ የጥርስ ሥር',
+            badge: 'የድድ መሸሽ ጥበቃ',
+            indication: 'የድድ መሸሽ (Gingival Recession) እና የጥርስ ሥር መጋለጥ ላለባቸው ታካሚዎች ተጨማሪ የድድ ጉዳት እንዳይደርስ የሚከላከል እና ድድን የሚያነቃቃ ዘዴ።',
+            animationCue: 'ብሩሹ ወደ ድድ ክፍተት (Sulcus) ሳይገባ በከፊል በድድ ላይ ሲያርፍ ድዱ ለአፍታ ነጣ (Blanching) ብሎ ወደ ጥርሱ ጫፍ ሲንከባለል ይመልከቱ።',
+            steps: [
+              { title: 'በድድ እና በጥርስ አንገት ላይ ማሳረፍ', desc: 'ብሩሹን በ45° በከፊል በተያያዘው ድድ ላይ እና በከፊል በጥርሱ አንገት ላይ ያሳርፉ (ወደ ድድ ክፍተት ውስጥ አያስገቡ)።', phaseRange: [0.0, 0.35] },
+              { title: 'የድድ መንጣት (Blanching) እና ንዝረት', desc: 'ድዱ በትንሹ እስኪነጣ ድረስ መጠነኛ ግፊት አድርገው የደም ዝውውርን ለማነቃቃት በአጭሩ ያርገብግቡ።', phaseRange: [0.35, 0.65] },
+              { title: 'ወደ ጥርሱ ጫፍ ማንከባለል', desc: 'ብሩሹን ወደ ጎን ሳይፈገፍጉ በተጋለጠው የጥርስ ሥር እና ዘውድ ላይ ወደ መነከሻው ጫፍ ያንከባልሉ።', phaseRange: [0.65, 1.0] }
+            ]
+          },
+          om: {
+            shortName: "3. Mala Stillman",
+            name: "Mala Stillman Fooyya'e",
+            categoryTag: 'IRGOO DHEENSAA & HIDDA MUL\'ATEEF',
+            badge: 'Eegumsa Irgoo',
+            indication: 'Namoota irgoon isaanii gad-siqe (recession) fi hiddi ilkaanii mul\'ateef miidhaa sulkasii ittisuun dhiiga irgoo dadammaqsa.',
+            animationCue: 'Burushiin osoo sulkasii hin seenin walakkaan irgoo irratti yeroo qubatu irgoon xiqqoo addaatee (blanching) gara fiixeetti yeroo naanna\'u ilaalaa.',
+            steps: [
+              { title: 'Irgoo fi Morma Ilkaanii Irratti Kaa\'uu', desc: 'Burushii walakkaa irgoo irratti, walakkaa ammoo morma ilkaanii irratti kaa\'aa (sulkasiitti hin galchinaa).', phaseRange: [0.0, 0.35] },
+              { title: 'Dhiibbaa Salphaa (Blanching) & Hollachiisa', desc: 'Dhiibbaa salphaan irgoon hanga xiqqoo addaatuutti qabaa, sochii hollachiisaa gabaabaa godhaa.', phaseRange: [0.35, 0.65] },
+              { title: 'Gara Fiixeetti Naannessuu', desc: 'Osoo dalga hin rigin hidda fi گوبbaa ilkaanii irra gara fiixee ciniinnaatti naannessaa.', phaseRange: [0.65, 1.0] }
+            ]
+          },
+          ti: {
+            shortName: "3. ሜላ ስቲልማን",
+            name: "ዝተመሓየሸ ሜላ ስቲልማን (Stillman's)",
+            categoryTag: 'ንዝሃደመ ግርጭትን ዝተቓልዐ ሱር ስንን',
+            badge: 'ክንክን ምህዳም ግርጭት',
+            indication: 'ምህዳም ግርጭት (Recession)ን ምቅላዕ ሱር ስንን ንዘለዎም ሕሙማት ተወሳኺ ማህሰይቲ ከይወርድ ዝከላኸል ሜላ።',
+            animationCue: 'ብሩሽ ናብ ውሽጢ ግርጭት ከይኣተወ ኣብ ልዕሊ ግርጭት ክዓርፍ ከሎ ግርጭት ብቕሩብ ክጻዕዱ (Blanching)ን ናብ ጫፍ ስኒ ክጥምዘዝ ከሎን ርኣዩ።',
+            steps: [
+              { title: 'ኣብ ልዕሊ ግርጭትን ክሳድ ስንን ምዕራፍ', desc: 'ጸጉሪ ብሩሽ ብኸፊል ኣብ ልዕሊ ግርጭትን ክሳድ ስንን የዕርፉ (ናብ ውሽጢ ክፍተት ግርጭት ኣይተእትዉ)።', phaseRange: [0.0, 0.35] },
+              { title: 'ምጽዕዳው ግርጭት (Blanching)ን ምንቅጥቃጥን', desc: 'ግርጭት ብቕሩብ ክሳብ ዝጻዕዱ ፈኲስ ጸቕጢ ብምግባር ሓጺር ምንቅጥቃጥ ይግበሩ።', phaseRange: [0.35, 0.65] },
+              { title: 'ናብ ጫፍ ስኒ ምጥምዛዝ', desc: 'ናብ ጎድኒ ከይፈግፈጉ ናብ መሕየኺ ጫፍ ስኒ ገጾም ብሩሽ ይጥምዝዙ።', phaseRange: [0.65, 1.0] }
+            ]
+          },
+          ar: {
+            shortName: "3. ستلمان المعدلة",
+            name: "طريقة ستلمان المعدلة (Stillman's)",
+            categoryTag: 'حماية انحسار اللثة والجذور المكشوفة',
+            badge: 'عناية انحسار اللثة',
+            indication: 'مثالية للمرضى الذين يعانون من انحسار اللثة وانكشاف ملاط الجذور لمنع إصابة الميزاب مع تنشيط الدورة الدموية للثة.',
+            animationCue: 'لاحظ استقرار الشعيرات على اللثة الملتصقة وعنق السن (دون دخول الميزاب) مما يسبب ابيضاضاً مؤقتاً للثة قبل لف الفرشاة نحو التاج.',
+            steps: [
+              { title: 'الوضع المائل على اللثة وعنق السن', desc: 'ضع الشعيرات بزاوية 45 درجة جزئياً على اللثة الملتصقة وجزئياً على عنق السن دون دخول الميزاب.', phaseRange: [0.0, 0.35] },
+              { title: 'ابيضاض اللثة المؤقت والاهتزاز', desc: 'اضغط برفق حتى يبيض لون اللثة قليلاً مع حركة اهتزازية قصيرة لتنشيط الأنسجة.', phaseRange: [0.35, 0.65] },
+              { title: 'اللف المتزامن نحو التاج', desc: 'لف رأس الفرشاة باتجاه السطح القاطع فوق الجذر المكشوف والتاج.', phaseRange: [0.65, 1.0] }
+            ]
+          }
+        }
+      },
+      {
+        id: 'charters',
+        number: 4,
+        themeHex: '#4F46E5',
+        angleText: '45° Coronal (Reverse)',
+        motionText: 'Rotary Interproximal',
+        pressureText: 'Gentle Controlled',
+        timerEnabled: true,
+        phaseLabels: ['Phase 1: 45° Coronal Under-Wire Threading', 'Phase 2: Rotary Bracket & Embrasure Agitation'],
+        i18n: {
+          en: {
+            shortName: "4. Charter's Method",
+            name: "Charter's Method (Orthodontic)",
+            categoryTag: 'ORTHODONTIC & PROSTHETIC CARE',
+            badge: 'Braces & Bridges',
+            indication: 'Indicated for patients with orthodontic appliances (brackets & archwires), fixed partial dentures (bridges), receded interdental papillae, or healing periodontal surgery sites.',
+            animationCue: 'Bristles are slanted 45° coronally toward the biting edge—the exact opposite of Bass—allowing bristle tips to visibly thread underneath the orthodontic archwire and bracket wings.',
+            steps: [
+              { title: 'Reverse 45° Coronal Angulation', desc: 'Point bristles coronally (toward the occlusal/chewing surface) at a 45-degree angle—opposite to the Bass technique.', phaseRange: [0.0, 0.35] },
+              { title: 'Thread Under Archwires & Pontics', desc: 'Position the brush above or below orthodontic brackets so bristle ends slide directly underneath the archwire and into interdental embrasures.', phaseRange: [0.35, 0.70] },
+              { title: 'Short Vibratory / Rotary Activation', desc: 'Apply short back-and-forth rotary vibratory movements to dislodge plaque around bracket wings and bridge spaces.', phaseRange: [0.70, 1.0] }
+            ]
+          },
+          am: {
+            shortName: "4. የቻርተር ዘዴ",
+            name: "የቻርተር ዘዴ (Charter's Orthodontic)",
+            categoryTag: 'ለብሬስ (BRACES) እና ለድልድይ ጥርስ',
+            badge: 'ለብሬስ እና ድልድይ',
+            indication: 'የጥርስ ብሬስ (Orthodontic brackets/wires)፣ የተተከለ ድልድይ ጥርስ (Bridge) ወይም የድድ ቀዶ ጥገና ላደረጉ ታካሚዎች በልዩ ሁኔታ የሚመከር።',
+            animationCue: 'ብሩሹ ከባስ ዘዴ በተቃራኒ በ45° ወደ መነከሻው ጫፍ ተዘንብሎ የብሩሹ ጫፎች ከብሬሱ ሽቦ (Archwire) ስር ሲገቡ ይመልከቱ።',
+            steps: [
+              { title: 'በ45° ወደ መነከሻው ጫፍ ማዘንበል', desc: 'ብሩሹን ከባስ ዘዴ በተቃራኒ አቅጣጫ በ45 ዲግሪ ወደ ጥርሱ መነከሻ ጫፍ ያዘንብሉ።', phaseRange: [0.0, 0.35] },
+              { title: 'ከብሬስ ሽቦ እና ድልድይ ስር ማስገባት', desc: 'የብሩሹ ጫፎች ከብሬሱ ሽቦ (Archwire) ስር እና በጥርሶች ክፍተት ውስጥ እንዲገቡ አድርገው ያስቀምጡ።', phaseRange: [0.35, 0.70] },
+              { title: 'አጭር ክብ የንዝረት እንቅስቃሴ', desc: 'በብሬሱ ዙሪያ የተጠራቀመውን ቆሻሻ ለማስወገድ አጭር ክብ/የንዝረት እንቅስቃሴ ያድርጉ።', phaseRange: [0.70, 1.0] }
+            ]
+          },
+          om: {
+            shortName: "4. Mala Charter's",
+            name: "Mala Charter's (Warra Braces)",
+            categoryTag: 'KUNUUNSA BRACES FI RIQICHA ILKAANII',
+            badge: 'Braces & Bridges',
+            indication: 'Namoota sibiila ilkaanii (orthodontic braces), riqicha ilkaanii (fixed bridges) ykn madaa baqaqsanii hodhuu irgoo qabaniif.',
+            animationCue: 'Rifeensi burushii faallaa mala Bass kofoo 45° gara fiixee ciniinnaatti garagaluun shiboo braces jala seenuu isaa ilaalaa.',
+            steps: [
+              { title: 'Kofoo 45° Faallaa (Gara Ciniinnaatti)', desc: 'Burushii kofoo 45° gara fiixee ciniinnaatti (faallaa mala Bass) qajeelchaa.', phaseRange: [0.0, 0.35] },
+              { title: 'Shiboo Braces Jala Galchuu', desc: 'Fiixeen burushii shiboo braces fi biraaketii jala akka seenu taasisaatii kaa\'aa.', phaseRange: [0.35, 0.70] },
+              { title: 'Sochii Naannoo fi Hollachiisaa', desc: 'Naannoo biraaketii fi riqicha ilkaanii qulqulleessuuf sochii naannoo gabaabaa godhaa.', phaseRange: [0.70, 1.0] }
+            ]
+          },
+          ti: {
+            shortName: "4. ሜላ ቻርተር",
+            name: "ሜላ ቻርተር (Charter's Orthodontic)",
+            categoryTag: 'ንብሬስ (BRACES)ን ድልድል ስንን',
+            badge: 'ብሬስን ድልድልን',
+            indication: 'ብሬስ ስኒ (Orthodontic appliances)፣ ተተካኢ ድልድል (Bridge) ወይ ድሕሪ መጥባሕቲ ግርጭት ንዘለዉ ሕሙማት ዝምከር።',
+            animationCue: 'ጸጉሪ ብሩሽ ኣንጻር ሜላ ባስ ብ45° ናብ መሕየኺ ጫፍ ተዘንቢሉ ኣብ ትሕቲ ሽቦ ብሬስ ክኣቱ ከሎ ርኣዩ።',
+            steps: [
+              { title: 'ብ45° ናብ መሕየኺ ጫፍ ምዝንባል', desc: 'ብሩሽ ብ45 ዲግሪ ናብ መሕየኺ ጫፍ ስኒ (ኣንጻር ሜላ ባስ) የዘንብሉ።', phaseRange: [0.0, 0.35] },
+              { title: 'ኣብ ትሕቲ ሽቦ ብሬስ ምእታው', desc: 'ጫፍ ብሩሽ ኣብ ትሕቲ ሽቦ ብሬስን መንጎ ኣስናንን ከም ዝኣቱ ይግበሩ።', phaseRange: [0.35, 0.70] },
+              { title: 'ሓጺር ዘዋሪ ምንቅጥቃጥ', desc: 'ኣብ ዙርያ ብሬስ ዘሎ ፕላክ ንምውጋድ ሓጺር ዘዋሪ ምንቅጥቃጥ ይግበሩ።', phaseRange: [0.70, 1.0] }
+            ]
+          },
+          ar: {
+            shortName: "4. طريقة تشارتر",
+            name: "طريقة تشارتر (لتقويم الأسنان)",
+            categoryTag: 'العناية بتقويم الأسنان والجسور',
+            badge: 'التقويم والجسور',
+            indication: 'مخصصة للمرضى الذين يضعون أجهزة تقويم الأسنان (الحاصرات والأسلاك) أو الجسور الثابتة أو بعد جراحات اللثة.',
+            animationCue: 'لاحظ توجيه الشعيرات بزاوية 45 درجة نحو السطح القاطع (عكس طريقة باس) لتتمكن من الدخول تحت سلك التقويم وحول الحاصرات.',
+            steps: [
+              { title: 'زاوية 45 درجة عكسية نحو التاج', desc: 'وجه الشعيرات بزاوية 45 درجة باتجاه السطح الطاحن أو القاطع (عكس طريقة باس).', phaseRange: [0.0, 0.35] },
+              { title: 'الإدخال تحت سلك التقويم والجسور', desc: 'مرر أطراف الشعيرات تحت سلك التقويم وحول أجنحة الحاصرات أو تحت الجسور.', phaseRange: [0.35, 0.70] },
+              { title: 'حركات اهتزازية دائرية قصيرة', desc: 'قم بحركات اهتزازية دائرية لطيفة لإزالة البلاك المتراكم حول التقويم.', phaseRange: [0.70, 1.0] }
+            ]
+          }
+        }
+      },
+      {
+        id: 'fones',
+        number: 5,
+        themeHex: '#D97706',
+        angleText: '90° Perpendicular',
+        motionText: 'Wide Circular Loops',
+        pressureText: 'Light Continuous',
+        timerEnabled: true,
+        phaseLabels: ['Phase 1: Maxillary Arch Circular Arc', 'Phase 2: Mandibular Arch Circular Arc'],
+        i18n: {
+          en: {
+            shortName: '5. Fones (Circular)',
+            name: 'Fones (Circular) Method',
+            categoryTag: 'PEDIATRIC & ACCESSIBLE DEXTERITY',
+            badge: 'Kids & Easy Dexterity',
+            indication: 'Primary technique taught to young children or individuals with limited manual dexterity because its wide rotary loop is intuitive and easy to master.',
+            animationCue: 'Both upper and lower arches are held closed in occlusion. Bristles press perpendicular (90°) against the teeth and trace wide, continuous circular orbits covering both jaws simultaneously.',
+            steps: [
+              { title: 'Close Teeth in Occlusion', desc: 'Hold upper and lower teeth gently together (biting closed) so both dental arches form a continuous buccal wall.', phaseRange: [0.0, 0.25] },
+              { title: '90° Perpendicular Bristle Placement', desc: 'Place soft toothbrush bristles flat (90° perpendicular) against the outer buccal surfaces of the teeth.', phaseRange: [0.25, 0.55] },
+              { title: 'Large Sweeping Circular Orbits', desc: 'Move the brush in wide, continuous circular rotary patterns sweeping across both upper and lower teeth and gums simultaneously.', phaseRange: [0.55, 1.0] }
+            ]
+          },
+          am: {
+            shortName: '5. የፎንስ ክብ ዘዴ',
+            name: 'የፎንስ ክብ ዘዴ (Fones Circular)',
+            categoryTag: 'ለህጻናት እና ለቀላል የእጅ እንቅስቃሴ',
+            badge: 'ለህጻናት ተመራጭ',
+            indication: 'ለህጻናት ወይም እጃቸውን በቀላሉ ማንቀሳቀስ ለሚቸገሩ ሰዎች በቀላሉ የሚለመድ እና ውጤታማ የመጀመሪያ ደረጃ የአቦራረሽ ዘዴ።',
+            animationCue: 'የላይ እና የታች ጥርሶች አንድ ላይ ተነክሰው ብሩሹ በ90 ዲግሪ ሰፊ ክብ እየሰራ ሁለቱንም መንጋጋዎች በአንድነት ሲያጸዳ ይመልከቱ።',
+            steps: [
+              { title: 'ጥርሶችን በቀስታ መንከስ', desc: 'የላይ እና የታች ጥርሶችን በቀስታ አንድ ላይ ይንከሱ።', phaseRange: [0.0, 0.25] },
+              { title: 'ብሩሹን በ90° ቀጥታ ማስቀመጥ', desc: 'ለስላሳ ብሩሹን በ90 ዲግሪ በጥርሶቹ የውጭ ገጽታ ላይ ያስቀምጡ።', phaseRange: [0.25, 0.55] },
+              { title: 'ሰፊ የክብ እንቅስቃሴ', desc: 'የላይ እና የታች ጥርሶችንና ድድን በአንድነት የሚያካትት ሰፊ ተከታታይ የክብ እንቅስቃሴ ያድርጉ።', phaseRange: [0.55, 1.0] }
+            ]
+          },
+          om: {
+            shortName: '5. Mala Fones',
+            name: 'Mala Fones (Geengoo)',
+            categoryTag: 'DAA\'IMMANII FI SOCHII SALPHAAF',
+            badge: 'Daa\'immaniif',
+            indication: 'Daa\'imman xixiqqoo ykn namoota harka salphaatti sochoosuu hin dandeenyeef mala salphaatti baramu.',
+            animationCue: 'Ilkaan gubbaa fi jalaa walitti ciniinamanii burushiin kofoo 90°n sochii geengoo bal\'aa lamaanuu irra naanna\'u ilaalaa.',
+            steps: [
+              { title: 'Ilkaan Walitti Ciniinuu', desc: 'Ilkaan gubbaa fi jalaa suuta walitti ciniinaa.', phaseRange: [0.0, 0.25] },
+              { title: 'Burushii Kofoo 90° Kaa\'uu', desc: 'Rifeensa burushii fuula ilkaanii alaa irratti 90° qajeelchaatii kaa\'aa.', phaseRange: [0.25, 0.55] },
+              { title: 'Sochii Geengoo Bal\'aa', desc: 'Ilkaan gubbaa fi jalaa walitti qabuun sochii geengoo گودdaa walirraa hin cinneen rigaa.', phaseRange: [0.55, 1.0] }
+            ]
+          },
+          ti: {
+            shortName: '5. ሜላ ፎንስ (ክብ)',
+            name: 'ሜላ ፎንስ (Fones Circular)',
+            categoryTag: 'ንህጻናትን ቀሊል ምንቅስቓስ ኢድን',
+            badge: 'ንህጻናት ዝምከር',
+            indication: 'ንህጻናት ወይ ምንቅስቓስ ኢድ ንዝሽገሩ ሰባት ብቐሊሉ ዝለመድ ቀዳማይ ሜላ።',
+            animationCue: 'ላዕለዋይን ታሕተዋይን ኣስናን ተነኺሶም ብሩሽ ብ90° ሰፊሕ ክብ እናሰርሐ ክልቲኡ መንጋጋ ብሓንሳብ ከጽሪ ከሎ ርኣዩ።',
+            steps: [
+              { title: 'ኣስናን ብህድኣት ምንካስ', desc: 'ላዕለዋይን ታሕተዋይን ኣስናን ብህድኣት ኣተሓሒዞም ይንከሱ።', phaseRange: [0.0, 0.25] },
+              { title: 'ብ90° ቀጥታ ምቕማጥ', desc: 'ብሩሽ ብ90 ዲግሪ ኣብ ደጋዊ ገጽ ኣስናን የቐምጡ።', phaseRange: [0.25, 0.55] },
+              { title: 'ሰፊሕ ክብ ምንቅስቓስ', desc: 'ንላዕለዋይን ታሕተዋይን ኣስናንን ግርጭትን ብሓንሳብ ብሰፊሕ ክብ ዙርያ ይጽረጉ።', phaseRange: [0.55, 1.0] }
+            ]
+          },
+          ar: {
+            shortName: '5. طريقة فونز',
+            name: 'طريقة فونز الدائرية (Fones)',
+            categoryTag: 'للأطفال وسهولة التحكم الحركي',
+            badge: 'للأطفال والمبتدئين',
+            indication: 'الطريقة الأساسية لتعليم الأطفال الصغار أو الأشخاص ذوي المهارات الحركية المحدودة لسهولة تطبيقها.',
+            animationCue: 'إطباق الفكين العلوي والسفلي معاً وتحريك الفرشاة بزاوية 90 درجة في دوائر واسعة تشمل الأسنان العلوية والسفلية.',
+            steps: [
+              { title: 'إطباق الأسنان معاً برفق', desc: 'أطبق الأسنان العلوية والسفلية معاً برفق.', phaseRange: [0.0, 0.25] },
+              { title: 'وضع الفرشاة بزاوية 90 درجة', desc: 'ضع شعيرات الفرشاة بشكل عمودي (90 درجة) على الأسطح الخارجية للأسنان.', phaseRange: [0.25, 0.55] },
+              { title: 'حركات دائرية واسعة ومستمرة', desc: 'حرك الفرشاة في دوائر كبيرة ومستمرة تغطي الأسنان واللثة العلوية والسفلية معاً.', phaseRange: [0.55, 1.0] }
+            ]
+          }
+        }
+      },
+      {
+        id: 'horizontal_scrub',
+        number: 6,
+        themeHex: '#DC2626',
+        angleText: '90° Flat Sawing',
+        motionText: 'Aggressive Horizontal',
+        pressureText: 'Excessive (>400g Trauma)',
+        timerEnabled: false,
+        phaseLabels: ['TRAUMA ALERT: Cervical Enamel Sawing', 'PATHOLOGY: Interproximal Plaque Missed'],
+        i18n: {
+          en: {
+            shortName: '6. Horizontal Scrub',
+            name: 'Horizontal Scrub (Contraindicated)',
+            categoryTag: 'CLINICAL WARNING — WHAT NOT TO DO',
+            badge: 'WARNING: Avoid This Habit',
+            indication: 'Commonly used by untrained individuals; included strictly as a clinical comparison point to demonstrate how improper horizontal scrubbing causes permanent dental pathology.',
+            animationCue: 'Notice how flat, rapid horizontal back-and-forth scrubbing skips the interproximal concavities (leaving red plaque untouched between teeth) while sawing a V-shaped cervical abrasion notch (NCCL) and causing gum recession.',
+            steps: [
+              { title: 'CAUTION: Flat Aggressive Sawing', desc: 'Placing bristles flat at 90° and scrubbing rapidly back and forth applies concentrated abrasive friction on the prominent root/crown convexities.', phaseRange: [0.0, 0.50] },
+              { title: 'Interproximal Plaque Left Untouched', desc: 'Because bristles bounce from tooth prominence to prominence, they fail to enter the gingival sulcus or interdental spaces where disease starts.', phaseRange: [0.50, 0.80] },
+              { title: 'Progressive Cervical Abrasion & Recession', desc: 'Use the red Time-Lapse Damage Slider below the stage to inspect how 1 to 5 years of horizontal scrubbing carves V-shaped notches and strips away gum tissue.', phaseRange: [0.80, 1.0] }
+            ]
+          },
+          am: {
+            shortName: '6. ወደ ጎን መፈግፈግ (ይቆጠቡ)',
+            name: 'ወደ ጎን መፈግፈግ (የተከለከለ ልምድ)',
+            categoryTag: 'ክሊኒካዊ ማስጠንቀቂያ — ይህንን አያድርጉ!',
+            badge: 'ማስጠንቀቂያ፦ ጥርስ ይጎዳል',
+            indication: 'ብዙ ሰዎች በልምድ የሚጠቀሙበት የተሳሳተ አቦራረሽ፤ በጥርሶች መካከል ያለውን ፕላክ ሳያጸዳ የጥርስ አንገትን ይቦረቡራል (Cervical Abrasion) እንዲሁም ድድን ያሸሻል።',
+            animationCue: 'ብሩሹ ወደ ጎን በፍጥነት ሲፈገفግ በጥርሶች መካከል ያለው ቀይ ፕላክ ሳይነካ እየቀረ የጥርሱ አንገት ግን በV-ቅርጽ ሲቦረቦር ይመልከቱ።',
+            steps: [
+              { title: 'ጥንቃቄ፦ ወደ ጎን በኃይል መፈግፈግ', desc: 'ብሩሹን በ90° አስተኝቶ ወደ ጎን በኃይል መፈግፈግ በጥርሱ አንገት ላይ ከፍተኛ ፍጭት ይፈጥራል።', phaseRange: [0.0, 0.50] },
+              { title: 'በጥርሶች መካከል ያለው ቆሻሻ አይጸዳም', desc: 'ብሩሹ ከጥርስ ወደ ጥርስ ስለሚዘል በጥርሶች መካከል እና በድድ መስመር ውስጥ ያለውን ፕላክ አያጸዳም።', phaseRange: [0.50, 0.80] },
+              { title: 'የጥርስ መቦርቦር እና የድድ መሸሽ', desc: 'ከምስሉ ስር ያለውን ቀይ መንሸራተቻ (Slider) በመጎተት በ5 ዓመት ውስጥ የሚፈጠረውን የጥርስ መቦርቦር እና የድድ መሸሽ ይመልከቱ።', phaseRange: [0.80, 1.0] }
+            ]
+          },
+          om: {
+            shortName: '6. Dalga Rigachuu (Dhiisaa)',
+            name: 'Dalga Rigachuu (Mala Miidhaa Fidu)',
+            categoryTag: 'OFEEGGANNOO KILINIKAA — HIN RAAWWATINAA',
+            badge: 'Ofeeggannoo: Miidhaa Fida',
+            indication: 'Bartee dogoggoraa namoonni baay\'een fayyadaman; gidduu ilkaanii osoo hin qulqulleessin morma ilkaanii nyaachuun (abrasion) irgoo gara duubaatti dhiiba.',
+            animationCue: 'Dalga humnaan rigachuun huuba diimaa gidduu ilkaanii jiru osoo hin xuqin morma ilkaanii boca V-tiin akkamitti akka قوqqoru ilaalaa.',
+            steps: [
+              { title: 'OFEEGGANNOO: Humnaan Dalga Rigachuu', desc: 'Burushii 90° diriirsuun dalga humnaan rigachuun morma ilkaanii irratti rigata cimaa uuma.', phaseRange: [0.0, 0.50] },
+              { title: 'Huubni Gidduu Ilkaanii Hin Qulqullaa\'u', desc: 'Burushiin gubbaa ilkaanii qofa irra waan darbuuf sulkasii fi gidduu ilkaanii hin seenu.', phaseRange: [0.50, 0.80] },
+              { title: 'Morma Ilkaanii Nyaatamuu & Irgoo Dheensuu', desc: 'Slider diimaa گاد-jiru sochoosuun miidhaa waggaa 1 hanga 5 keessatti uumamu ilaalaa.', phaseRange: [0.80, 1.0] }
+            ]
+          },
+          ti: {
+            shortName: '6. ናብ ጎድኒ ምፍግፋግ (ተጠንቀቑ)',
+            name: 'ናብ ጎድኒ ምፍግፋግ (ዝተኸልከለ ልምዲ)',
+            categoryTag: 'ክሊኒካዊ መጠንቀቕታ — ኣይትጠቐሙሉ!',
+            badge: 'መጠንቀቕታ፦ ስኒ ይጎድእ',
+            indication: 'ብዙሓት ሰባት ብልምዲ ዝጥቀምሉ ግጉይ ኣገባብ፤ ኣብ መንጎ ኣስናን ዘሎ ርስሓት ከየጽረየ ክሳድ ስኒ ይፍሕርን ግርጭት የህድምን።',
+            animationCue: 'ናብ ጎድኒ ብፍጥነት ክፍግፈግ ከሎ ኣብ መንጎ ኣስናን ዘሎ ቀይሕ ፕላክ ከይተተንከፈ ክሳድ ስኒ ግን ብቅርጺ-V ክፍሓር ከሎ ርኣዩ።',
+            steps: [
+              { title: 'ጥንቃቐ፦ ናብ ጎድኒ ብሓይሊ ምፍግፋግ', desc: 'ብሩሽ ብ90° ኣደቂስካ ናብ ጎድኒ ብሓይሊ ምፍግፋግ ኣብ ክሳድ ስኒ ሓያል ምፍሓኽ ይፈጥር።', phaseRange: [0.0, 0.50] },
+              { title: 'ኣብ መንጎ ኣስናን ዘሎ ፕላክ ኣይጸርን', desc: 'ብሩሽ ካብ ገጽ ናብ ገጽ ስለ ዝዘልል ናብ ውሽጢ ግርጭትን መንጎ ኣስናንን ኣይኣቱን።', phaseRange: [0.50, 0.80] },
+              { title: 'ምፍሓር ክሳድ ስንን ምህዳም ግርጭትን', desc: 'ኣብ ትሕቲ እቲ ስእሊ ዘሎ ቀይሕ መንሸራተቲ ብምስሓብ ኣብ 5 ዓመት ዝፍጠር ጉድኣት ተዓዘቡ።', phaseRange: [0.80, 1.0] }
+            ]
+          },
+          ar: {
+            shortName: '6. الفرك الأفقي (تجنبه)',
+            name: 'الفرك الأفقي العنيف (ممارسة خاطئة)',
+            categoryTag: 'تحذير سريري — تجنب هذه العادة',
+            badge: 'تحذير: يسبب تآكل الأسنان',
+            indication: 'عادة شائعة غير صحيحة؛ تُعرض هنا للتوعية بكيفية تسبب الفرك الأفقي في تآكل أعناق الأسنان وانحسار اللثة الدائم.',
+            animationCue: 'لاحظ كيف يتخطى الفرك الأفقي السريع المسافات بين الأسنان (تاركاً البلاك الأحمر) بينما يحفر ثلمة على شكل حرف V في عنق السن.',
+            steps: [
+              { title: 'تحذير: الفرك الأفقي السريع والعنيف', desc: 'وضع الفرشاة بشكل مسطح وفركها أفقياً بقوة يسلط احتكاكاً مدمراً على أعناق الأسنان البارزة.', phaseRange: [0.0, 0.50] },
+              { title: 'إهمال البلاك بين الأسنان', desc: 'تقفز الشعيرات فوق تحدبات الأسنان دون الدخول في الميزاب اللثوي أو الفراغات البينية.', phaseRange: [0.50, 0.80] },
+              { title: 'تآكل العنق وانحسار اللثة التدريجي', desc: 'حرك شريط التمرير الأحمر أسفل العرض لمعاينة تطور تآكل السن وانحسار اللثة خلال 5 سنوات.', phaseRange: [0.80, 1.0] }
+            ]
+          }
+        }
+      }
+    ];
 
-  const stepList = document.getElementById("stepList");
-  stepList.innerHTML = "";
-  loc.steps.forEach(s => {
-    const li = document.createElement("li");
-    li.className = "step-item";
-    li.style.borderInlineStartColor = method.color;
-    li.textContent = s;
-    stepList.appendChild(li);
-  });
+    const state = {
+      lang: 'en',
+      currentTechIndex: 0,
+      viewMode: 'buccal',         // 'buccal' | 'lingual' | 'interdental'
+      isPlaying: true,
+      speedMultiplier: 1.0,
+      showVectors: true,
+      showLoupe: true,
+      lockedStepIndex: null,
+      animCycleProgress: 0,
+      lastTimestamp: 0,
+      damageLevel: 0.35,
+      plaqueParticles: [],
+      streakCount: parseInt(localStorage.getItem('dentguide_streak') || '0', 10),
+      quizSelection: {
+        ortho: 'no',
+        gums: 'normal',
+        dex: 'adult_sweep'
+      },
+      pacer: {
+        running: false,
+        remainingSeconds: 120,
+        audioEnabled: true,
+        voiceEnabled: true,
+        intervalId: null
+      }
+    };
 
-  // Damage Slider Visibility
-  const damageBox = document.getElementById("damageBox");
-  const stageWrapper = document.getElementById("stageWrapper");
-  if (method.id === "horizontal_scrub") {
-    damageBox.style.display = "block";
-    stageWrapper.style.borderColor = "#dc2626";
-  } else {
-    damageBox.style.display = "none";
-    stageWrapper.style.borderColor = method.color;
-  }
-
-  // Pacer Button State
-  const startBtn = document.getElementById("btnStartTimer");
-  if (!method.timerAllowed) {
-    startBtn.disabled = true;
-    startBtn.style.background = "#475569";
-    startBtn.textContent = ui.lockedBtn;
-  } else {
-    startBtn.disabled = false;
-    startBtn.style.background = method.color;
-    startBtn.textContent = timerInterval ? ui.pauseBtn : ui.startBtn;
-  }
-
-  // Quadrants
-  ui.quads.forEach((qName, i) => {
-    document.getElementById(`quad${i}`).textContent = qName;
-  });
-}
-
-/* ============================================================================
-   4. 60FPS MULTI-VIEW BIOMECHANICAL CANVAS ENGINE
-   ============================================================================ */
-const canvas = document.getElementById("dentalCanvas");
-const ctx = canvas.getContext("2d");
-
-function drawRoundedRect(x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, r);
-  ctx.fill();
-  ctx.stroke();
-}
-
-function renderCanvas() {
-  const method = METHODS[currentMethodIndex];
-  const speed = isSlowMo ? 0.025 : 0.065;
-  animTick += speed;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (currentViewMode === "buccal") {
-    drawBuccalAndLoupeView(method, animTick);
-  } else if (currentViewMode === "lingual") {
-    drawLingualVerticalHeelView(method, animTick);
-  } else {
-    drawInterdentalAdjunctView(method, animTick);
-  }
-
-  requestAnimationFrame(renderCanvas);
-}
-
-/* --- VIEW 1: BUCCAL ANTERIOR + SAGITTAL CROSS-SECTION LOUPE --- */
-function drawBuccalAndLoupeView(method, t) {
-  // Left 62% = Buccal View, Right 38% = Sagittal Cross-Section Loupe
-  const splitX = 420;
-
-  // 1. Gingival Tissue Background (Left)
-  let gumColor = "#e11d48";
-  if (method.id === "modified_stillman") {
-    // Blanching pulse
-    const blanch = (Math.sin(t * 2) + 1) * 0.5;
-    gumColor = blanch > 0.55 ? "#fda4af" : "#e11d48";
-  }
-  ctx.fillStyle = gumColor;
-  ctx.fillRect(20, 30, 370, 125);
-
-  // Recession offset for Stillman's or Horizontal Scrub
-  const recOffset = method.id === "horizontal_scrub" ? damageYears * 7 : (method.id === "modified_stillman" ? 16 : 0);
-
-  // Draw 3 Anterior Maxillary Crowns (#7, #8, #9)
-  const toothX = [55, 165, 275];
-  toothX.forEach((tx, idx) => {
-    // Exposed Root if recession present
-    if (recOffset > 0) {
-      ctx.fillStyle = "#fde68a";
-      ctx.strokeStyle = "#b45309";
-      ctx.lineWidth = 2;
-      drawRoundedRect(tx + 8, 125 - recOffset, 74, 45, 10);
+    // Parse URL Deep Links (?method=charters&lang=am)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('lang') && UI_LOCALE[urlParams.get('lang')]) {
+      state.lang = urlParams.get('lang');
+      document.getElementById('langSelect').value = state.lang;
+    }
+    if (urlParams.get('method')) {
+      const mIdx = TECHNIQUES.findIndex(t => t.id === urlParams.get('method'));
+      if (mIdx !== -1) state.currentTechIndex = mIdx;
     }
 
-    // Clinical Crown
-    ctx.fillStyle = "#f8fafc";
-    ctx.strokeStyle = "#94a3b8";
-    ctx.lineWidth = 2;
-    drawRoundedRect(tx, 130, 90, 135, 18);
+    // Initialize Telegram Mini App if inside Telegram
+    if (window.Telegram && window.Telegram.WebApp) {
+      window.Telegram.WebApp.ready();
+      window.Telegram.WebApp.expand();
+    }
 
-    // Orthodontic Brackets & Archwire for Charter's
-    if (method.id === "charters") {
-      ctx.fillStyle = "#64748b";
-      ctx.fillRect(tx + 33, 182, 24, 20);
-      ctx.strokeStyle = "#cbd5e1";
+    document.getElementById('streakCountText').textContent = state.streakCount;
+
+    function initPlaqueParticles() {
+      state.plaqueParticles = [];
+      for (let t = 0; t < 3; t++) {
+        for (let i = 0; i < 10; i++) {
+          const u = (i / 9) - 0.5;
+          state.plaqueParticles.push({
+            toothIndex: t,
+            u: u * 0.85,
+            zone: 'sulcus',
+            offsetY: -4 + Math.sin(u * Math.PI) * 10,
+            health: 1.0,
+            radius: 2.8 + (i % 2) * 0.8
+          });
+        }
+        for (let i = 0; i < 6; i++) {
+          const u = (i / 5) - 0.5;
+          state.plaqueParticles.push({
+            toothIndex: t,
+            u: u * 0.78,
+            zone: 'crown',
+            offsetY: 22 + (i % 2) * 14,
+            health: 1.0,
+            radius: 2.8
+          });
+        }
+        for (let i = 0; i < 4; i++) {
+          state.plaqueParticles.push({
+            toothIndex: t,
+            u: (i < 2 ? -0.47 : 0.47),
+            zone: 'interproximal',
+            offsetY: 8 + (i % 2) * 12,
+            health: 1.0,
+            radius: 3.2
+          });
+        }
+      }
+      updatePlaqueTelemetry();
+    }
+
+    function updatePlaqueTelemetry() {
+      if (!state.plaqueParticles.length) return;
+      const total = state.plaqueParticles.length;
+      const cleanedSum = state.plaqueParticles.reduce((acc, p) => acc + (1 - p.health), 0);
+      const pct = Math.min(100, Math.round((cleanedSum / total) * 100));
+      const el = document.getElementById('telemetryPlaque');
+      if (el) {
+        el.textContent = `${pct}%`;
+        el.className = pct > 70 ? 'text-emerald-400' : pct > 30 ? 'text-amber-400' : 'text-slate-300';
+      }
+    }
+
+    function applyLocalizationUI() {
+      const ui = UI_LOCALE[state.lang];
+      document.documentElement.lang = state.lang;
+      document.documentElement.dir = ui.dir;
+
+      document.getElementById('headerSubtitle').textContent = ui.subtitle;
+      document.getElementById('navMatcherLabel').textContent = ui.matcher;
+      document.getElementById('navQrLabel').textContent = ui.qrLink;
+      document.getElementById('navPacerLabel').textContent = ui.pacerBtn;
+      document.getElementById('viewBtnBuccal').textContent = ui.viewBuccal;
+      document.getElementById('viewBtnLingual').textContent = ui.viewLingual;
+      document.getElementById('viewBtnInterdental').textContent = ui.viewInterdental;
+      document.getElementById('btnResetBiofilmText').textContent = ui.resetBiofilm;
+      document.getElementById('lblIndicationHeader').textContent = ui.indicationHeader;
+      document.getElementById('lblStepsHeader').textContent = ui.stepsHeader;
+      document.getElementById('lblWatchCueHeader').textContent = ui.watchCueHeader;
+
+      selectTechnique(state.currentTechIndex, false);
+    }
+
+    function renderTechniqueNav() {
+      const container = document.getElementById('techniqueNavContainer');
+      container.innerHTML = '';
+
+      TECHNIQUES.forEach((tech, idx) => {
+        const isSelected = idx === state.currentTechIndex;
+        const isWarning = tech.id === 'horizontal_scrub';
+        const loc = tech.i18n[state.lang];
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `px-3 py-1.5 rounded-xl font-display font-semibold text-xs whitespace-nowrap flex items-center gap-1.5 transition-all border ${
+          isSelected
+            ? isWarning
+              ? 'bg-red-600 text-white border-red-400 shadow-lg shadow-red-600/30'
+              : 'bg-slate-100 text-slate-950 border-white shadow-md'
+            : isWarning
+              ? 'bg-red-950/40 hover:bg-red-900/50 text-red-300 border-red-500/40'
+              : 'bg-slate-900/90 hover:bg-slate-800 text-slate-300 border-slate-800'
+        }`;
+
+        const dotHtml = isWarning
+          ? `<i class="fa-solid fa-triangle-exclamation ${isSelected ? 'text-white' : 'text-red-400'}"></i>`
+          : `<span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${tech.themeHex}"></span>`;
+
+        btn.innerHTML = `${dotHtml}<span>${loc.shortName}</span>`;
+        btn.addEventListener('click', () => selectTechnique(idx, true));
+        container.appendChild(btn);
+      });
+    }
+
+    function selectTechnique(index, resetPlaque = true) {
+      state.currentTechIndex = index;
+      state.lockedStepIndex = null;
+      state.animCycleProgress = 0;
+
+      const tech = TECHNIQUES[index];
+      const loc = tech.i18n[state.lang];
+      const ui = UI_LOCALE[state.lang];
+      const isWarning = tech.id === 'horizontal_scrub';
+
+      renderTechniqueNav();
+      if (resetPlaque) initPlaqueParticles();
+
+      document.getElementById('stageTitle').textContent = loc.name;
+      const stageBadge = document.getElementById('stageBadge');
+      stageBadge.textContent = loc.badge;
+      stageBadge.style.backgroundColor = `${tech.themeHex}25`;
+      stageBadge.style.color = isWarning ? '#fca5a5' : '#5eead4';
+      stageBadge.style.borderColor = `${tech.themeHex}66`;
+
+      const stageCard = document.getElementById('stageCard');
+      stageCard.classList.toggle('border-red-500/70', isWarning);
+      stageCard.classList.toggle('border-slate-800', !isWarning);
+
+      document.getElementById('damageSimulatorCard').classList.toggle('hidden', !isWarning);
+      document.getElementById('telemetryAngle').textContent = tech.angleText;
+
+      const catTag = document.getElementById('detailCategoryTag');
+      catTag.textContent = loc.categoryTag;
+      catTag.style.color = isWarning ? '#f87171' : '#2dd4bf';
+
+      document.getElementById('detailMethodName').textContent = loc.name;
+      document.getElementById('detailIndication').textContent = loc.indication;
+      document.getElementById('paramAngle').textContent = tech.angleText;
+      document.getElementById('paramMotion').textContent = tech.motionText;
+      document.getElementById('paramPressure').textContent = tech.pressureText;
+      document.getElementById('detailAnimationCue').textContent = loc.animationCue;
+
+      const compareBtn = document.getElementById('compareHorizontalBtn');
+      if (isWarning) {
+        compareBtn.innerHTML = `<i class="fa-solid fa-check-circle text-emerald-400"></i><span>${ui.backToModBass}</span>`;
+        compareBtn.className = 'px-2.5 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-medium flex items-center gap-1.5 transition shrink-0';
+      } else {
+        compareBtn.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-400"></i><span>${ui.whyNotScrub}</span>`;
+        compareBtn.className = 'px-2.5 py-1.5 rounded-lg bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 text-xs font-medium flex items-center gap-1.5 transition shrink-0';
+      }
+
+      renderStepsList(tech);
+
+      const pacerBtn = document.getElementById('sidebarLaunchPacerBtn');
+      const pacerBtnText = document.getElementById('sidebarLaunchPacerText');
+      if (isWarning) {
+        pacerBtn.className = 'mt-1 w-full py-3 px-4 rounded-xl bg-red-950/60 border border-red-500/50 text-red-300 font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-not-allowed';
+        pacerBtnText.textContent = ui.disabledPacerSidebar;
+      } else {
+        pacerBtn.className = 'mt-1 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-teal-600 to-sky-600 hover:from-teal-500 hover:to-sky-500 text-white font-display font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition-all';
+        pacerBtnText.textContent = `${ui.startPacerSidebar} (${loc.shortName})`;
+      }
+    }
+
+    function renderStepsList(tech) {
+      const container = document.getElementById('stepsListContainer');
+      container.innerHTML = '';
+      const steps = tech.i18n[state.lang].steps;
+
+      steps.forEach((step, idx) => {
+        const isLocked = state.lockedStepIndex === idx;
+        const card = document.createElement('div');
+        card.id = `stepCard-${idx}`;
+        card.className = `p-3 rounded-xl border transition-all cursor-pointer select-none ${
+          isLocked
+            ? 'bg-teal-950/50 border-teal-400 shadow-md'
+            : 'bg-slate-900/75 hover:bg-slate-900 border-slate-800'
+        }`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <div class="flex items-center gap-2">
+              <span id="stepBadge-${idx}" class="w-5 h-5 rounded-full text-[11px] font-mono font-bold flex items-center justify-center bg-slate-800 text-slate-300 border border-slate-700 shrink-0">
+                ${idx + 1}
+              </span>
+              <h4 class="font-display font-bold text-xs sm:text-sm text-white">${step.title}</h4>
+            </div>
+            <span class="text-[10px] font-mono text-slate-400 shrink-0">
+              ${isLocked ? '<i class="fa-solid fa-lock text-teal-400"></i> Locked' : 'Syncs Live'}
+            </span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed ps-7">${step.desc}</p>
+        `;
+
+        card.addEventListener('click', () => {
+          if (state.lockedStepIndex === idx) {
+            state.lockedStepIndex = null;
+          } else {
+            state.lockedStepIndex = idx;
+            state.animCycleProgress = (step.phaseRange[0] + step.phaseRange[1]) * 0.5;
+          }
+          renderStepsList(tech);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    function updateStepHighlights(progress, tech) {
+      const fill1 = document.getElementById('phaseFill1');
+      const fill2 = document.getElementById('phaseFill2');
+      const activePhaseText = document.getElementById('activePhaseText');
+
+      if (progress < 0.5) {
+        fill1.style.width = `${(progress / 0.5) * 100}%`;
+        fill2.style.width = '0%';
+        activePhaseText.textContent = tech.phaseLabels[0];
+      } else {
+        fill1.style.width = '100%';
+        fill2.style.width = `${((progress - 0.5) / 0.5) * 100}%`;
+        activePhaseText.textContent = tech.phaseLabels[1];
+      }
+
+      const steps = tech.i18n[state.lang].steps;
+      steps.forEach((step, idx) => {
+        const card = document.getElementById(`stepCard-${idx}`);
+        const badge = document.getElementById(`stepBadge-${idx}`);
+        if (!card || !badge) return;
+
+        const isActive = state.lockedStepIndex === idx ||
+          (state.lockedStepIndex === null && progress >= step.phaseRange[0] && progress <= step.phaseRange[1]);
+
+        if (isActive) {
+          card.style.borderColor = tech.themeHex;
+          card.style.backgroundColor = `${tech.themeHex}18`;
+          badge.style.backgroundColor = tech.themeHex;
+          badge.style.color = '#ffffff';
+        } else {
+          card.style.borderColor = 'rgba(30, 41, 59, 0.9)';
+          card.style.backgroundColor = 'rgba(15, 23, 42, 0.75)';
+          badge.style.backgroundColor = '#1e293b';
+          badge.style.color = '#cbd5e1';
+        }
+      });
+    }
+
+    const canvas = document.getElementById('biomechCanvas');
+    const ctx = canvas.getContext('2d');
+    const VIRTUAL_W = 680;
+    const VIRTUAL_H = 420;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.max(320, Math.round(rect.width * dpr));
+      canvas.height = Math.max(200, Math.round((rect.width * (VIRTUAL_H / VIRTUAL_W)) * dpr));
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    function animateStage(timestamp) {
+      if (!state.lastTimestamp) state.lastTimestamp = timestamp;
+      const dt = Math.min(0.05, (timestamp - state.lastTimestamp) / 1000);
+      state.lastTimestamp = timestamp;
+
+      const tech = TECHNIQUES[state.currentTechIndex];
+      const steps = tech.i18n[state.lang].steps;
+
+      if (state.isPlaying && state.lockedStepIndex === null) {
+        const cycleDuration = 4.2;
+        state.animCycleProgress = (state.animCycleProgress + (dt * state.speedMultiplier) / cycleDuration) % 1.0;
+      } else if (state.lockedStepIndex !== null && steps[state.lockedStepIndex]) {
+        const step = steps[state.lockedStepIndex];
+        const span = step.phaseRange[1] - step.phaseRange[0];
+        const osc = (Math.sin(timestamp * 0.006 * state.speedMultiplier) * 0.5 + 0.5);
+        state.animCycleProgress = step.phaseRange[0] + span * (0.2 + 0.6 * osc);
+      }
+
+      updateStepHighlights(state.animCycleProgress, tech);
+
+      // Scale all drawing operations cleanly from 680x420 virtual coordinates to actual screen pixels
+      ctx.save();
+      const scaleX = canvas.width / VIRTUAL_W;
+      const scaleY = canvas.height / VIRTUAL_H;
+      ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
+      ctx.clearRect(0, 0, VIRTUAL_W, VIRTUAL_H);
+
+      if (state.viewMode === 'buccal') {
+        renderBuccalAndLoupeScene(tech, state.animCycleProgress, timestamp);
+      } else if (state.viewMode === 'lingual') {
+        renderLingualHeelScene(tech, state.animCycleProgress, timestamp);
+      } else {
+        renderInterdentalScene(tech, state.animCycleProgress, timestamp);
+      }
+
+      ctx.restore();
+      requestAnimationFrame(animateStage);
+    }
+
+    function renderBuccalAndLoupeScene(tech, p, timestamp) {
+      const w = VIRTUAL_W;
+      const h = VIRTUAL_H;
+      const loupeWidth = state.showLoupe ? 245 : 0;
+      const buccalCenterX = state.showLoupe ? (w - loupeWidth) * 0.5 : w * 0.5;
+      const gumMarginBaselineY = tech.id === 'fones' ? h * 0.36 : h * 0.43;
+
+      let recessionOffset = 0;
+      if (tech.id === 'modified_stillman') {
+        recessionOffset = -22;
+      } else if (tech.id === 'horizontal_scrub') {
+        recessionOffset = -32 * state.damageLevel;
+      }
+
+      const kin = computeBrushKinematics(tech.id, p, timestamp, buccalCenterX, gumMarginBaselineY, recessionOffset);
+      drawBuccalAnteriorScene(ctx, w, h, buccalCenterX, gumMarginBaselineY, recessionOffset, tech, kin, p);
+
+      if (state.showLoupe) {
+        drawSagittalLoupeViewport(ctx, w, h, tech, kin, p, recessionOffset);
+      }
+    }
+
+    function computeBrushKinematics(techId, p, timestamp, centerX, marginY, recessionOffset) {
+      const fastVib = Math.sin(timestamp * 0.032 * state.speedMultiplier);
+      const actualMarginY = marginY + recessionOffset;
+
+      let brushX = centerX + Math.sin(p * Math.PI * 2) * 38;
+      let brushY = actualMarginY;
+      let angleDeg = 45;
+      let sweepRoll = 0;
+      let blanchIntensity = 0;
+
+      if (techId === 'bass') {
+        brushX = centerX + (p < 0.5 ? -32 : 32) + fastVib * 4.5;
+        brushY = actualMarginY + 2;
+        angleDeg = 45;
+      } else if (techId === 'modified_bass') {
+        if (p < 0.5) {
+          brushX = centerX + fastVib * 4.5;
+          brushY = actualMarginY + 2;
+          angleDeg = 45;
+        } else {
+          const sp = (p - 0.5) / 0.5;
+          sweepRoll = Math.sin(sp * Math.PI * 0.85);
+          brushX = centerX;
+          brushY = actualMarginY + 2 + sweepRoll * 82;
+          angleDeg = 45 - sweepRoll * 30;
+        }
+      } else if (techId === 'modified_stillman') {
+        if (p < 0.55) {
+          const pressPhase = Math.min(1, p / 0.25);
+          brushX = centerX + fastVib * 3.5;
+          brushY = actualMarginY - 12;
+          angleDeg = 45;
+          blanchIntensity = pressPhase * (0.75 + 0.25 * Math.abs(fastVib));
+        } else {
+          const sp = (p - 0.55) / 0.45;
+          sweepRoll = Math.sin(sp * Math.PI * 0.9);
+          brushX = centerX;
+          brushY = (actualMarginY - 12) + sweepRoll * 95;
+          angleDeg = 45 - sweepRoll * 28;
+          blanchIntensity = Math.max(0, 1 - sp * 2.5);
+        }
+      } else if (techId === 'charters') {
+        const bracketY = marginY + 55;
+        brushX = centerX + Math.sin(p * Math.PI * 2) * 34 + fastVib * 3.5;
+        brushY = bracketY - 22;
+        angleDeg = -45;
+      } else if (techId === 'fones') {
+        const theta = p * Math.PI * 2;
+        brushX = centerX + Math.cos(theta) * 68;
+        brushY = (marginY + 75) + Math.sin(theta) * 58;
+        angleDeg = 90;
+      } else if (techId === 'horizontal_scrub') {
+        const sawWave = Math.sin(p * Math.PI * 6);
+        brushX = centerX + sawWave * 85;
+        brushY = actualMarginY + 18;
+        angleDeg = 90;
+      }
+
+      return { brushX, brushY, angleDeg, sweepRoll, blanchIntensity, fastVib };
+    }
+
+    function drawBuccalAnteriorScene(ctx, w, h, centerX, marginY, recessionOffset, tech, kin, p) {
+      ctx.save();
+      const toothWidth = 74;
+      const toothHeight = 112;
+      const gap = 6;
+      const startX = centerX - (toothWidth * 1.5 + gap);
+      const actualMarginY = marginY + recessionOffset;
+
+      // 1. Background Gingival Tissue
+      const gingivaGrad = ctx.createLinearGradient(0, 30, 0, marginY + 50);
+      gingivaGrad.addColorStop(0, '#9f1239');
+      gingivaGrad.addColorStop(0.45, '#e11d48');
+      gingivaGrad.addColorStop(1, '#fb7185');
+      ctx.fillStyle = gingivaGrad;
+      ctx.beginPath();
+      ctx.roundRect(centerX - 155, 32, 310, marginY + 35, 22);
+      ctx.fill();
+
+      // Mucogingival junction line
+      ctx.strokeStyle = 'rgba(255, 228, 230, 0.22)';
+      ctx.setLineDash([4, 4]);
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(centerX - 145, 72);
+      ctx.lineTo(centerX + 145, 72);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // 2. Render 3 Maxillary Anterior Teeth (#7, #8, #9)
+      for (let i = 0; i < 3; i++) {
+        const tx = startX + i * (toothWidth + gap);
+        const ty = marginY;
+
+        if (recessionOffset < -1) {
+          ctx.fillStyle = '#eab308';
+          ctx.beginPath();
+          ctx.roundRect(tx + 7, actualMarginY - 6, toothWidth - 14, Math.abs(recessionOffset) + 28, 12);
+          ctx.fill();
+
+          if (tech.id === 'horizontal_scrub' && state.damageLevel > 0.08) {
+            const notchDepth = state.damageLevel * 12;
+            ctx.fillStyle = '#78350f';
+            ctx.beginPath();
+            ctx.ellipse(tx + toothWidth / 2, ty + 6, (toothWidth - 18) * 0.46, notchDepth, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#dc2626';
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+          }
+        }
+
+        const enamelGrad = ctx.createLinearGradient(tx, ty, tx + toothWidth, ty + toothHeight);
+        enamelGrad.addColorStop(0, '#f8fafc');
+        enamelGrad.addColorStop(0.5, '#f1f5f9');
+        enamelGrad.addColorStop(1, '#cbd5e1');
+
+        ctx.fillStyle = enamelGrad;
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.8;
+
+        ctx.beginPath();
+        ctx.moveTo(tx + 6, ty + 14);
+        ctx.quadraticCurveTo(tx + toothWidth * 0.5, ty - 14, tx + toothWidth - 6, ty + 14);
+        ctx.lineTo(tx + toothWidth - 3, ty + toothHeight - 14);
+        ctx.quadraticCurveTo(tx + toothWidth * 0.5, ty + toothHeight + 2, tx + 3, ty + toothHeight - 14);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.28)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(tx + toothWidth * 0.35, ty + 24);
+        ctx.lineTo(tx + toothWidth * 0.35, ty + toothHeight - 20);
+        ctx.moveTo(tx + toothWidth * 0.65, ty + 24);
+        ctx.lineTo(tx + toothWidth * 0.65, ty + toothHeight - 20);
+        ctx.stroke();
+      }
+
+      // 3. Fones Mandibular Arch in Occlusion
+      if (tech.id === 'fones') {
+        const lowerStartY = marginY + toothHeight + 4;
+        const lowGingivaGrad = ctx.createLinearGradient(0, lowerStartY + 40, 0, lowerStartY + 130);
+        lowGingivaGrad.addColorStop(0, '#fb7185');
+        lowGingivaGrad.addColorStop(1, '#9f1239');
+        ctx.fillStyle = lowGingivaGrad;
+        ctx.beginPath();
+        ctx.roundRect(centerX - 155, lowerStartY + 52, 310, 75, 20);
+        ctx.fill();
+
+        for (let i = 0; i < 3; i++) {
+          const tx = startX + i * (toothWidth + gap);
+          ctx.fillStyle = '#e2e8f0';
+          ctx.strokeStyle = '#64748b';
+          ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          ctx.roundRect(tx + 4, lowerStartY, toothWidth - 8, 78, 10);
+          ctx.fill();
+          ctx.stroke();
+        }
+      }
+
+      // 4. Scalloped Free Gingival Margin & Interdental Papillae
+      ctx.fillStyle = '#fb7185';
+      ctx.beginPath();
+      ctx.moveTo(centerX - 155, 45);
+      ctx.lineTo(startX - 12, actualMarginY + 14);
+      for (let i = 0; i < 3; i++) {
+        const tx = startX + i * (toothWidth + gap);
+        ctx.quadraticCurveTo(tx + toothWidth * 0.5, actualMarginY - 18, tx + toothWidth + gap * 0.5, actualMarginY + 16);
+      }
+      ctx.lineTo(centerX + 155, actualMarginY + 14);
+      ctx.lineTo(centerX + 155, 45);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = tech.id === 'horizontal_scrub' ? '#ef4444' : '#fda4af';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      for (let i = 0; i < 3; i++) {
+        const tx = startX + i * (toothWidth + gap);
+        if (i === 0) ctx.moveTo(tx, actualMarginY + 14);
+        ctx.quadraticCurveTo(tx + toothWidth * 0.5, actualMarginY - 17, tx + toothWidth + gap * 0.5, actualMarginY + 14);
+      }
+      ctx.stroke();
+
+      // 5. Modified Stillman's Gingival Blanching Shader
+      if (tech.id === 'modified_stillman' && kin.blanchIntensity > 0.05) {
+        const blanchGrad = ctx.createRadialGradient(
+          kin.brushX, actualMarginY - 16, 4,
+          kin.brushX, actualMarginY - 16, 68
+        );
+        blanchGrad.addColorStop(0, `rgba(255, 250, 250, ${0.85 * kin.blanchIntensity})`);
+        blanchGrad.addColorStop(0.55, `rgba(254, 226, 226, ${0.45 * kin.blanchIntensity})`);
+        blanchGrad.addColorStop(1, 'rgba(251, 113, 133, 0)');
+        ctx.fillStyle = blanchGrad;
+        ctx.beginPath();
+        ctx.ellipse(kin.brushX, actualMarginY - 16, 68, 26, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 6. Charter's Orthodontic Brackets & Archwire
+      if (tech.id === 'charters') {
+        const wireY = marginY + 56;
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(startX - 18, wireY);
+        ctx.lineTo(startX + 3 * (toothWidth + gap) + 12, wireY);
+        ctx.stroke();
+
+        for (let i = 0; i < 3; i++) {
+          const bx = startX + i * (toothWidth + gap) + toothWidth * 0.5;
+          ctx.strokeStyle = '#6366f1';
+          ctx.lineWidth = 3;
+          ctx.strokeRect(bx - 11, wireY - 10, 22, 20);
+
+          ctx.fillStyle = '#cbd5e1';
+          ctx.strokeStyle = '#475569';
+          ctx.lineWidth = 1.5;
+          ctx.fillRect(bx - 9, wireY - 8, 18, 16);
+          ctx.strokeRect(bx - 9, wireY - 8, 18, 16);
+
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(bx - 9, wireY - 1.5, 18, 3);
+        }
+      }
+
+      // 7. Interactive Biofilm Plaque Particles
+      state.plaqueParticles.forEach(pt => {
+        const tx = startX + pt.toothIndex * (toothWidth + gap) + toothWidth * 0.5;
+        const px = tx + pt.u * toothWidth;
+        const py = actualMarginY + pt.offsetY;
+
+        const distX = Math.abs(px - kin.brushX);
+        const distY = Math.abs(py - kin.brushY);
+
+        if (distX < 52 && distY < 26 && state.isPlaying) {
+          if (tech.id === 'horizontal_scrub') {
+            if (pt.zone === 'crown') pt.health = Math.max(0, pt.health - 0.04);
+          } else {
+            pt.health = Math.max(0, pt.health - 0.035);
+          }
+        }
+
+        if (pt.health > 0.05) {
+          ctx.fillStyle = tech.id === 'horizontal_scrub' && pt.zone !== 'crown'
+            ? `rgba(239, 68, 68, ${0.88 * pt.health})`
+            : `rgba(45, 212, 191, ${0.8 * pt.health})`;
+          ctx.beginPath();
+          ctx.arc(px, py, pt.radius * (0.5 + 0.5 * pt.health), 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+      updatePlaqueTelemetry();
+
+      // 8. Toothbrush Head & Bristle Tufts
+      drawBuccalToothbrush(ctx, kin, tech);
+
+      // 9. Biomechanical Vector Overlays
+      if (state.showVectors) {
+        drawBuccalVectorOverlays(ctx, kin, tech, centerX, marginY);
+      }
+
+      ctx.restore();
+    }
+
+    function drawBuccalToothbrush(ctx, kin, tech) {
+      ctx.save();
+      ctx.translate(kin.brushX, kin.brushY);
+      const headWidth = 108;
+      const headHeight = 26;
+      const tiltOffset = (kin.angleDeg === 90) ? 0 : (kin.angleDeg > 0 ? -10 : 10);
+
+      const numTufts = 11;
+      for (let i = 0; i < numTufts; i++) {
+        const bx = -headWidth * 0.42 + (i / (numTufts - 1)) * (headWidth * 0.84);
+        const flexX = kin.fastVib * 2.2;
+
+        ctx.strokeStyle = tech.id === 'horizontal_scrub'
+          ? 'rgba(248, 113, 113, 0.85)'
+          : 'rgba(94, 234, 212, 0.85)';
+        ctx.lineWidth = 2.4;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(bx, tiltOffset);
+        ctx.lineTo(bx + flexX, -tiltOffset * 1.15);
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(bx + flexX, -tiltOffset * 1.15, 1.7, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+      ctx.strokeStyle = tech.themeHex;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(-headWidth / 2, tiltOffset - headHeight / 2, headWidth, headHeight, 13);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.7)';
+      ctx.beginPath();
+      ctx.roundRect(headWidth / 2 - 4, tiltOffset - 7, 58, 14, 6);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawBuccalVectorOverlays(ctx, kin, tech, centerX, marginY) {
+      ctx.save();
+      if (tech.id === 'fones') {
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.65)';
+        ctx.lineWidth = 2.2;
+        ctx.setLineDash([6, 5]);
+        ctx.beginPath();
+        ctx.ellipse(centerX, marginY + 75, 68, 58, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      } else if (tech.id === 'horizontal_scrub') {
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2.8;
+        const y = kin.brushY - 26;
+        ctx.beginPath();
+        ctx.moveTo(centerX - 95, y);
+        ctx.lineTo(centerX + 95, y);
+        ctx.stroke();
+
+        ctx.fillStyle = '#fca5a5';
+        ctx.font = 'bold 10px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚠ AGGRESSIVE HORIZONTAL SAWING (CAUSES NCCL)', centerX, y - 8);
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '600 10px "JetBrains Mono", monospace';
+        ctx.textAlign = 'center';
+        const tagY = kin.brushY - 28;
+        ctx.fillText(
+          tech.id === 'charters'
+            ? '45° CORONAL (UNDER ARCHWIRE) ↔'
+            : kin.sweepRoll > 0.15
+              ? '↓ CORONAL CROWN SWEEP ↓'
+              : '↔ 1–2mm VIBRATORY STROKE (45° APICAL)',
+          kin.brushX,
+          tagY
+        );
+      }
+      ctx.restore();
+    }
+
+    function drawSagittalLoupeViewport(ctx, w, h, tech, kin, p, recessionOffset) {
+      const loupeW = 236;
+      const loupeH = h - 20;
+      const lx = w - loupeW - 10;
+      const ly = 10;
+
+      ctx.save();
+      ctx.fillStyle = 'rgba(9, 14, 26, 0.94)';
+      ctx.strokeStyle = tech.themeHex;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.roundRect(lx, ly, loupeW, loupeH, 14);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.roundRect(lx, ly, loupeW, loupeH, 14);
+      ctx.clip();
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+      ctx.fillRect(lx, ly, loupeW, 32);
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 10.5px "JetBrains Mono", monospace';
+      ctx.fillText('SAGITTAL CROSS-SECTION LOUPE', lx + 12, ly + 20);
+
+      const toothAxisX = lx + loupeW * 0.68;
+      const cejY = ly + loupeH * 0.44;
+      const sulcusTipY = cejY + (recessionOffset * 0.65);
+
+      // Root Dentin
+      ctx.fillStyle = '#eab308';
+      ctx.beginPath();
+      ctx.moveTo(toothAxisX - 16, ly + 40);
+      ctx.lineTo(toothAxisX + 38, ly + 40);
+      ctx.lineTo(toothAxisX + 38, cejY + 10);
+      ctx.lineTo(toothAxisX - 20, cejY + 10);
+      ctx.closePath();
+      ctx.fill();
+
+      const notchDepthX = tech.id === 'horizontal_scrub' ? state.damageLevel * 18 : 0;
+
+      // Clinical Crown Enamel
+      const crownGrad = ctx.createLinearGradient(toothAxisX - 26, cejY, toothAxisX + 35, cejY + 135);
+      crownGrad.addColorStop(0, '#f8fafc');
+      crownGrad.addColorStop(1, '#cbd5e1');
+      ctx.fillStyle = crownGrad;
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 1.5;
+
+      ctx.beginPath();
+      ctx.moveTo(toothAxisX - 20, cejY);
+      if (notchDepthX > 1) {
+        ctx.lineTo(toothAxisX - 20 + notchDepthX, cejY + 9);
+        ctx.lineTo(toothAxisX - 24, cejY + 20);
+      }
+      ctx.quadraticCurveTo(toothAxisX - 34, cejY + 72, toothAxisX - 10, cejY + 135);
+      ctx.lineTo(toothAxisX + 26, cejY + 125);
+      ctx.lineTo(toothAxisX + 36, cejY);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Pulp Chamber
+      ctx.fillStyle = '#f43f5e';
+      ctx.beginPath();
+      ctx.moveTo(toothAxisX + 4, ly + 40);
+      ctx.lineTo(toothAxisX + 14, ly + 40);
+      ctx.lineTo(toothAxisX + 8, cejY + 75);
+      ctx.lineTo(toothAxisX + 2, cejY + 75);
+      ctx.closePath();
+      ctx.fill();
+
+      // Periodontal Gingiva & Sulcus Crevice
+      const gingivaColor = (tech.id === 'modified_stillman' && kin.blanchIntensity > 0.1)
+        ? '#fecdd3'
+        : '#fb7185';
+      ctx.fillStyle = gingivaColor;
+      ctx.beginPath();
+      ctx.moveTo(toothAxisX - 18, ly + 40);
+      ctx.lineTo(toothAxisX - 18, sulcusTipY - 8);
+      ctx.lineTo(toothAxisX - 29, sulcusTipY + 16);
+      ctx.quadraticCurveTo(toothAxisX - 48, sulcusTipY - 6, toothAxisX - 36, ly + 40);
+      ctx.closePath();
+      ctx.fill();
+
+      // Subgingival Plaque inside sulcus
+      if (tech.id === 'bass' || tech.id === 'modified_bass' || tech.id === 'horizontal_scrub') {
+        ctx.fillStyle = tech.id === 'horizontal_scrub' ? '#ef4444' : '#2dd4bf';
+        ctx.beginPath();
+        ctx.arc(toothAxisX - 22, sulcusTipY + 5, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Orthodontic Bracket in Sagittal Profile
+      const bracketSagY = cejY + 58;
+      if (tech.id === 'charters') {
+        ctx.fillStyle = '#cbd5e1';
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 1.5;
+        ctx.fillRect(toothAxisX - 44, bracketSagY - 10, 18, 20);
+        ctx.strokeRect(toothAxisX - 44, bracketSagY - 10, 18, 20);
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(toothAxisX - 39, bracketSagY, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Sagittal Bristles & Brush Block
+      let targetX = toothAxisX - 23;
+      let targetY = sulcusTipY + 8;
+      let angleRad = (-45 * Math.PI) / 180;
+
+      if (tech.id === 'bass') {
+        targetY = sulcusTipY + 6 + kin.fastVib * 1.5;
+      } else if (tech.id === 'modified_bass') {
+        targetY = sulcusTipY + 6 + kin.sweepRoll * 78;
+        angleRad = ((-45 + kin.sweepRoll * 38) * Math.PI) / 180;
+      } else if (tech.id === 'modified_stillman') {
+        targetX = toothAxisX - 28;
+        targetY = (sulcusTipY - 10) + kin.sweepRoll * 85;
+        angleRad = ((-45 + kin.sweepRoll * 35) * Math.PI) / 180;
+      } else if (tech.id === 'charters') {
+        targetX = toothAxisX - 30;
+        targetY = bracketSagY - 11 + kin.fastVib * 1.5;
+        angleRad = (45 * Math.PI) / 180;
+      } else if (tech.id === 'fones') {
+        targetX = toothAxisX - 28;
+        targetY = cejY + 55 + Math.sin(p * Math.PI * 2) * 38;
+        angleRad = 0;
+      } else if (tech.id === 'horizontal_scrub') {
+        targetX = toothAxisX - 22 + notchDepthX * 0.6;
+        targetY = cejY + 10 + kin.fastVib * 2.5;
+        angleRad = 0;
+      }
+
+      const bristleLen = 36;
+      const headBackX = targetX - Math.cos(angleRad) * bristleLen;
+      const headBackY = targetY - Math.sin(angleRad) * bristleLen;
+
+      ctx.strokeStyle = tech.id === 'horizontal_scrub' ? '#f87171' : '#5eead4';
+      ctx.lineWidth = 2.2;
+      for (let r = -2; r <= 2; r++) {
+        const perpX = -Math.sin(angleRad) * (r * 5.2);
+        const perpY = Math.cos(angleRad) * (r * 5.2);
+        ctx.beginPath();
+        ctx.moveTo(headBackX + perpX, headBackY + perpY);
+        ctx.lineTo(targetX + perpX * 0.55, targetY + perpY * 0.55);
+        ctx.stroke();
+      }
+
+      ctx.save();
+      ctx.translate(headBackX, headBackY);
+      ctx.rotate(angleRad + Math.PI / 2);
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = tech.themeHex;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(-19, -6, 38, 12, 5);
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      if (state.showVectors) {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(lx + 10, ly + loupeH - 52, loupeW - 20, 42, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = '9.5px "JetBrains Mono", monospace';
+        ctx.fillText('LOUPE GEOMETRY READOUT:', lx + 16, ly + loupeH - 35);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 10.5px "JetBrains Mono", monospace';
+        let geoLabel = '45° Into Sulcus (0.8mm)';
+        if (tech.id === 'modified_bass') geoLabel = kin.sweepRoll > 0.15 ? 'Coronal Roll Sweep' : '45° Sulcular Entry';
+        if (tech.id === 'modified_stillman') geoLabel = kin.blanchIntensity > 0.1 ? 'Gingival Blanching (45°)' : 'Cervical Root Roll';
+        if (tech.id === 'charters') geoLabel = '45° Coronal Under Wire';
+        if (tech.id === 'fones') geoLabel = '90° Circular Occlusion';
+        if (tech.id === 'horizontal_scrub') geoLabel = `NCCL Notch: ${(state.damageLevel * 2.2).toFixed(1)}mm`;
+        ctx.fillText(geoLabel, lx + 16, ly + loupeH - 19);
+      }
+
+      ctx.restore();
+    }
+
+    function renderLingualHeelScene(tech, p, timestamp) {
+      ctx.save();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 13px "JetBrains Mono", monospace';
+      ctx.fillText('PALATAL / LINGUAL ANTERIOR ARCH — VERTICAL HEEL-OF-BRUSH ADAPTATION', 24, 32);
+
+      // Palatal Mucosa Arch
+      ctx.strokeStyle = '#fb7185';
+      ctx.lineWidth = 36;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(340, 320, 195, Math.PI * 1.15, Math.PI * 1.85);
+      ctx.stroke();
+
+      // 4 Maxillary Incisors along Palatal Arch
+      const angles = [-0.42, -0.14, 0.14, 0.42];
+      angles.forEach(ang => {
+        const x = 340 + Math.sin(ang) * 195;
+        const y = 320 - Math.cos(ang) * 195;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(ang);
+        ctx.fillStyle = '#f8fafc';
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(-28, -32, 56, 56, 14);
+        ctx.fill();
+        ctx.stroke();
+
+        // Lingual Cingulum & Fossa
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 6, 16, 0, Math.PI, true);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // Vertical Toothbrush Handle & Heel Stroke
+      const vibY = Math.sin(timestamp * 0.012 * state.speedMultiplier) * 22;
+      ctx.save();
+      ctx.translate(340, 185 + vibY);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+      ctx.strokeStyle = tech.themeHex;
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(25, 192);
-      ctx.lineTo(385, 192);
+      ctx.roundRect(-24, -60, 48, 120, 18);
+      ctx.fill();
       ctx.stroke();
-    }
-  });
 
-  // Lower Teeth in Occlusion for Fones
-  if (method.id === "fones") {
-    toothX.forEach(tx => {
-      ctx.fillStyle = "#f1f5f9";
-      ctx.strokeStyle = "#94a3b8";
-      drawRoundedRect(tx + 4, 267, 82, 75, 14);
-    });
-  }
-
-  // Animated Brush Trajectory on Buccal View
-  let bx = 210, by = 140;
-  if (method.id === "bass") {
-    bx = 210 + Math.sin(t * 5) * 6;
-    by = 128;
-  } else if (method.id === "modified_bass") {
-    const phase = t % (Math.PI * 2);
-    bx = 210 + (phase < Math.PI ? Math.sin(t * 6) * 5 : 0);
-    by = phase < Math.PI ? 128 : 128 + ((phase - Math.PI) / Math.PI) * 95;
-  } else if (method.id === "modified_stillman") {
-    const phase = (Math.sin(t * 1.5) + 1) * 0.5;
-    bx = 210 + Math.sin(t * 5) * 4;
-    by = 112 + phase * 85;
-  } else if (method.id === "charters") {
-    bx = 210 + Math.sin(t * 5) * 7;
-    by = 168;
-  } else if (method.id === "fones") {
-    bx = 210 + Math.cos(t * 1.8) * 65;
-    by = 225 + Math.sin(t * 1.8) * 55;
-  } else if (method.id === "horizontal_scrub") {
-    bx = 210 + Math.sin(t * 4.5) * 95;
-    by = 138;
-  }
-
-  // Render Translucent Brush Head
-  ctx.save();
-  ctx.fillStyle = method.color + "88";
-  ctx.strokeStyle = method.color;
-  ctx.lineWidth = 2;
-  drawRoundedRect(bx - 70, by - 18, 140, 36, 10);
-  ctx.restore();
-
-  // --- RIGHT VIEWPORT: SAGITTAL CROSS-SECTION LOUPE ---
-  ctx.fillStyle = "#111827";
-  ctx.fillRect(splitX, 0, canvas.width - splitX, canvas.height);
-  ctx.strokeStyle = "#334155";
-  ctx.beginPath();
-  ctx.moveTo(splitX, 0);
-  ctx.lineTo(splitX, canvas.height);
-  ctx.stroke();
-
-  // Label
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "bold 12px sans-serif";
-  ctx.fillText("SAGITTAL SULCUS LOUPE", splitX + 18, 26);
-
-  // Sagittal Root & Crown
-  const sx = splitX + 135;
-  ctx.fillStyle = "#fde68a"; // Dentin/Root
-  ctx.fillRect(sx, 55, 58, 115);
-
-  // V-Shaped Cervical Abrasion Notch for Horizontal Scrub
-  if (method.id === "horizontal_scrub") {
-    ctx.fillStyle = "#111827";
-    ctx.beginPath();
-    ctx.moveTo(sx - 2, 145);
-    ctx.lineTo(sx + damageYears * 5.2, 162);
-    ctx.lineTo(sx - 2, 178);
-    ctx.closePath();
-    ctx.fill();
-  }
-
-  // Sagittal Enamel Crown
-  ctx.fillStyle = "#f8fafc";
-  ctx.beginPath();
-  ctx.moveTo(sx, 165);
-  ctx.quadraticCurveTo(sx - 26, 230, sx + 8, 295);
-  ctx.lineTo(sx + 58, 295);
-  ctx.lineTo(sx + 58, 165);
-  ctx.closePath();
-  ctx.fill();
-
-  // Sagittal Free Gingiva & Sulcus
-  const gumDrop = method.id === "horizontal_scrub" ? damageYears * 6 : 0;
-  ctx.fillStyle = gumColor;
-  ctx.beginPath();
-  ctx.moveTo(sx - 48, 55);
-  ctx.lineTo(sx, 55);
-  ctx.lineTo(sx, 140 - gumDrop);
-  // Sulcus gap
-  ctx.lineTo(sx - 9, 166 - gumDrop);
-  ctx.quadraticCurveTo(sx - 35, 150 - gumDrop, sx - 48, 95);
-  ctx.closePath();
-  ctx.fill();
-
-  // Sagittal Bristles at Exact Clinical Angle
-  ctx.strokeStyle = method.color;
-  ctx.lineWidth = 3;
-  const vib = Math.sin(t * 6) * 2.5;
-  for (let i = 0; i < 5; i++) {
-    ctx.beginPath();
-    if (method.id === "bass" || method.id === "modified_bass") {
-      // 45° Apical into Sulcus
-      const sweepY = method.id === "modified_bass" && (t % (Math.PI * 2) > Math.PI) ? 45 : 0;
-      ctx.moveTo(sx - 55, 195 + i * 7 + sweepY);
-      ctx.lineTo(sx - 3 + vib, 152 + i * 5 + sweepY);
-    } else if (method.id === "modified_stillman") {
-      // 45° Apical on Gingiva + Cervical Neck (Above sulcus)
-      ctx.moveTo(sx - 58, 168 + i * 7);
-      ctx.lineTo(sx - 12 + vib, 128 + i * 6);
-    } else if (method.id === "charters") {
-      // 45° Coronal (Reverse angle under bracket)
-      ctx.moveTo(sx - 58, 175 + i * 7);
-      ctx.lineTo(sx - 14 + vib, 215 + i * 6);
-    } else {
-      // 90° Perpendicular
-      ctx.moveTo(sx - 60, 155 + i * 9);
-      ctx.lineTo(sx - 4 + vib, 155 + i * 9);
-    }
-    ctx.stroke();
-  }
-
-  // Angle Badge in Loupe
-  ctx.fillStyle = method.color;
-  ctx.font = "bold 13px sans-serif";
-  ctx.fillText(method.angle, splitX + 18, 335);
-}
-
-/* --- VIEW 2: LINGUAL ANTERIOR VERTICAL "HEEL-OF-BRUSH" VIEW --- */
-function drawLingualVerticalHeelView(method, t) {
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "bold 14px sans-serif";
-  ctx.fillText("PALATAL / LINGUAL ANTERIOR ARCH — VERTICAL HEEL-OF-BRUSH TECHNIQUE", 24, 30);
-
-  // Draw Palatal Arch Curve
-  ctx.strokeStyle = "#f43f5e";
-  ctx.lineWidth = 28;
-  ctx.beginPath();
-  ctx.arc(340, 290, 190, Math.PI * 1.15, Math.PI * 1.85);
-  ctx.stroke();
-
-  // Draw 4 Lingual Incisors along the arch
-  const incisorAngles = [-0.42, -0.14, 0.14, 0.42];
-  incisorAngles.forEach(ang => {
-    const x = 340 + Math.sin(ang) * 185;
-    const y = 290 - Math.cos(ang) * 185;
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(ang);
-    ctx.fillStyle = "#f8fafc";
-    ctx.strokeStyle = "#64748b";
-    ctx.lineWidth = 2;
-    drawRoundedRect(-26, -32, 52, 55, 12);
-    // Lingual cingulum contour
-    ctx.strokeStyle = "#cbd5e1";
-    ctx.beginPath();
-    ctx.arc(0, 5, 16, 0, Math.PI, true);
-    ctx.stroke();
-    ctx.restore();
-  });
-
-  // Vertical Toothbrush Handle & Heel-of-Brush Stroke
-  const sweep = Math.sin(t * 2.5) * 18;
-  ctx.save();
-  ctx.translate(340, 175 + sweep);
-  ctx.fillStyle = method.color + "aa";
-  ctx.strokeStyle = method.color;
-  ctx.lineWidth = 3;
-  // Narrow vertical brush head
-  drawRoundedRect(-22, -55, 44, 115, 16);
-  // Handle extending down
-  ctx.fillRect(-10, 60, 20, 110);
-  ctx.restore();
-
-  ctx.fillStyle = "#e2e8f0";
-  ctx.font = "13px sans-serif";
-  ctx.fillText("Rotate brush vertically so the heel engages narrow lingual sulci & cingula.", 24, 340);
-}
-
-/* --- VIEW 3: INTERDENTAL ADJUNCTS (C-FLOSS, INTERDENTAL BRUSH, SUPERFLOSS) --- */
-function drawInterdentalAdjunctView(method, t) {
-  const isOrtho = method.id === "charters";
-  const title = isOrtho
-    ? "ORTHODONTIC SUPERFLOSS THREADER & INTERDENTAL BRUSH"
-    : "C-SHAPED SUBGINGIVAL FLOSSING & INTERDENTAL EMBRASURE BRUSH";
-
-  ctx.fillStyle = "#94a3b8";
-  ctx.font = "bold 14px sans-serif";
-  ctx.fillText(title, 24, 30);
-
-  // Two Adjacent Teeth with Interproximal Embrasure & Papilla
-  const t1x = 185, t2x = 315;
-  [t1x, t2x].forEach(tx => {
-    ctx.fillStyle = "#f8fafc";
-    ctx.strokeStyle = "#64748b";
-    ctx.lineWidth = 2;
-    drawRoundedRect(tx, 110, 110, 175, 22);
-  });
-
-  // Interdental Gingival Papilla
-  ctx.fillStyle = "#e11d48";
-  ctx.beginPath();
-  ctx.moveTo(150, 60);
-  ctx.lineTo(460, 60);
-  ctx.lineTo(460, 125);
-  ctx.lineTo(315, 125);
-  ctx.lineTo(305, 168); // Papilla peak
-  ctx.lineTo(295, 125);
-  ctx.lineTo(150, 125);
-  ctx.closePath();
-  ctx.fill();
-
-  // Animated C-Shape Floss Wrapping Mesial/Distal Root Surface
-  const flossY = 148 + Math.sin(t * 2.2) * 28;
-  ctx.strokeStyle = "#38bdf8";
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  ctx.moveTo(220, flossY + 35);
-  ctx.quadraticCurveTo(298, flossY - 18, 385, flossY + 35);
-  ctx.stroke();
-
-  // Interdental conical brush animation on right side
-  const brushOsc = Math.sin(t * 4) * 10;
-  ctx.fillStyle = "#10b981";
-  ctx.beginPath();
-  ctx.moveTo(510 + brushOsc, 165);
-  ctx.lineTo(575 + brushOsc, 145);
-  ctx.lineTo(575 + brushOsc, 185);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = "#e2e8f0";
-  ctx.font = "13px sans-serif";
-  ctx.fillText("Brushing cleans ~60% of tooth surfaces; C-flossing & interdental brushes clear the remaining 40%.", 24, 340);
-}
-
-/* ============================================================================
-   5. 2-MINUTE AUDIO & SPOKEN VOICEOVER PACER + TELEGRAM STREAK LOGGING
-   ============================================================================ */
-let timerSeconds = 120;
-let timerInterval = null;
-
-function playBeep(freq = 660, duration = 0.18) {
-  try {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.frequency.value = freq;
-    gain.gain.value = 0.15;
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
-  } catch (e) {}
-}
-
-function speakCue(text) {
-  if (!document.getElementById("chkVoice").checked) return;
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = currentLang === "ar" ? "ar-SA" : "en-US";
-    window.speechSynthesis.speak(utter);
-  }
-}
-
-function updatePacerUI() {
-  const mins = String(Math.floor(timerSeconds / 60)).padStart(2, "0");
-  const secs = String(timerSeconds % 60).padStart(2, "0");
-  document.getElementById("timerDisplay").textContent = `${mins}:${secs}`;
-
-  const elapsed = 120 - timerSeconds;
-  const quadIdx = Math.min(3, Math.floor(elapsed / 30));
-  const surfaceIdx = Math.min(2, Math.floor((elapsed % 30) / 10));
-
-  for (let i = 0; i < 4; i++) {
-    document.getElementById(`quad${i}`).classList.toggle("active", i === quadIdx);
-  }
-
-  const ui = UI_STRINGS[currentLang];
-  document.getElementById("pacerSurfaceCue").textContent =
-    `${ui.quads[quadIdx]} • ${ui.surfaces[surfaceIdx]}`;
-
-  if (elapsed % 10 === 0 && timerSeconds < 120 && timerSeconds > 0) {
-    playBeep(elapsed % 30 === 0 ? 880 : 580, 0.22);
-    speakCue(`${ui.quads[quadIdx]}, ${ui.surfaces[surfaceIdx]}`);
-  }
-}
-
-document.getElementById("btnStartTimer").onclick = () => {
-  if (!METHODS[currentMethodIndex].timerAllowed) return;
-  const ui = UI_STRINGS[currentLang];
-
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-    document.getElementById("btnStartTimer").textContent = ui.startBtn;
-    return;
-  }
-
-  playBeep(740, 0.2);
-  speakCue(METHODS[currentMethodIndex].i18n[currentLang].name);
-  document.getElementById("btnStartTimer").textContent = ui.pauseBtn;
-
-  timerInterval = setInterval(() => {
-    timerSeconds--;
-    updatePacerUI();
-
-    if (timerSeconds <= 0) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      playBeep(980, 0.45);
-      streakCount++;
-      localStorage.setItem("dentguide_streak", String(streakCount));
-      document.getElementById("streakBadge").textContent = `🔥 ${streakCount}`;
-
-      // Send completion payload to Telegram Bot if running inside Telegram Mini App
-      if (window.Telegram && window.Telegram.WebApp) {
-        window.Telegram.WebApp.sendData(JSON.stringify({
-          event: "brushing_completed",
-          method: METHODS[currentMethodIndex].id,
-          lang: currentLang,
-          streak: streakCount
-        }));
+      // Bristle tufts engaging lingual cingulum
+      ctx.fillStyle = '#5eead4';
+      for (let by = -44; by <= 44; by += 16) {
+        ctx.beginPath();
+        ctx.arc(-10, by, 3.5, 0, Math.PI * 2);
+        ctx.arc(10, by, 3.5, 0, Math.PI * 2);
+        ctx.fill();
       }
-      timerSeconds = 120;
-      renderUI();
+
+      // Brush Handle
+      ctx.fillStyle = tech.themeHex;
+      ctx.beginPath();
+      ctx.roundRect(-10, 60, 20, 120, 6);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '12px "Inter", sans-serif';
+      ctx.fillText('Rotate the brush vertically for narrow upper/lower front teeth so the heel reaches the lingual sulcus.', 24, 395);
+      ctx.restore();
     }
-  }, 1000);
-};
 
-document.getElementById("btnResetTimer").onclick = () => {
-  clearInterval(timerInterval);
-  timerInterval = null;
-  timerSeconds = 120;
-  updatePacerUI();
-  renderUI();
-};
+    function renderInterdentalScene(tech, p, timestamp) {
+      ctx.save();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 13px "JetBrains Mono", monospace';
+      ctx.fillText('INTERDENTAL DEBRIDEMENT — C-SHAPED FLOSS & INTERPROXIMAL BRUSH', 24, 32);
 
-/* ============================================================================
-   6. EVENT LISTENERS, MATCHER, QR GENERATOR & INLINE PWA SERVICE WORKER
-   ============================================================================ */
-document.getElementById("langSelect").onchange = (e) => {
-  currentLang = e.target.value;
-  renderUI();
-  updatePacerUI();
-};
+      // Two Adjacent Crowns
+      const drawTooth = (tx) => {
+        ctx.fillStyle = '#f8fafc';
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(tx, 120, 115, 185, 24);
+        ctx.fill();
+        ctx.stroke();
+      };
+      drawTooth(155);
+      drawTooth(290);
 
-document.querySelectorAll(".mode-btn").forEach(btn => {
-  btn.onclick = () => {
-    document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    currentViewMode = btn.dataset.view;
-  };
-});
+      // Interdental Papilla
+      ctx.fillStyle = '#fb7185';
+      ctx.beginPath();
+      ctx.moveTo(120, 55);
+      ctx.lineTo(445, 55);
+      ctx.lineTo(445, 135);
+      ctx.lineTo(292, 135);
+      ctx.lineTo(280, 185);
+      ctx.lineTo(268, 135);
+      ctx.lineTo(120, 135);
+      ctx.closePath();
+      ctx.fill();
 
-document.getElementById("btnSlowMo").onclick = (e) => {
-  isSlowMo = !isSlowMo;
-  e.target.style.borderColor = isSlowMo ? "#0d9488" : "#334155";
-};
+      // Animated Subgingival C-Shaped Floss
+      const flossY = 158 + Math.sin(timestamp * 0.008 * state.speedMultiplier) * 30;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(190, flossY + 38);
+      ctx.quadraticCurveTo(275, flossY - 22, 365, flossY + 38);
+      ctx.stroke();
 
-document.getElementById("damageSlider").oninput = (e) => {
-  damageYears = parseFloat(e.target.value);
-  document.getElementById("lblDamageYear").textContent = `Year ${damageYears.toFixed(1)}`;
-};
+      // Conical Interdental Brush on Right
+      const oscX = Math.sin(timestamp * 0.015 * state.speedMultiplier) * 12;
+      ctx.fillStyle = '#10b981';
+      ctx.beginPath();
+      ctx.moveTo(490 + oscX, 185);
+      ctx.lineTo(585 + oscX, 155);
+      ctx.lineTo(585 + oscX, 215);
+      ctx.closePath();
+      ctx.fill();
 
-// Matcher Modal
-document.getElementById("btnTriage").onclick = () => {
-  document.getElementById("triageModal").style.display = "flex";
-};
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '12px "Inter", sans-serif';
+      ctx.fillText('Brushing cleans ~60% of tooth surfaces; C-shaped flossing & interdental brushes clean the remaining 40%.', 24, 395);
+      ctx.restore();
+    }
 
-document.getElementById("btnApplyTriage").onclick = () => {
-  const braces = document.getElementById("qBraces").value;
-  const recession = document.getElementById("qRecession").value;
-  const age = document.getElementById("qAge").value;
-
-  if (braces === "yes") currentMethodIndex = 3; // Charter's
-  else if (recession === "yes") currentMethodIndex = 2; // Modified Stillman's
-  else if (age === "child") currentMethodIndex = 4; // Fones
-  else currentMethodIndex = 1; // Modified Bass
-
-  document.getElementById("triageModal").style.display = "none";
-  renderUI();
-};
-
-// Chairside QR Prescription Generator
-document.getElementById("btnQr").onclick = () => {
-  const baseUrl = window.location.origin + window.location.pathname;
-  const deepUrl = `${baseUrl}?method=${METHODS[currentMethodIndex].id}&lang=${currentLang}`;
-  document.getElementById("qrUrlInput").value = deepUrl;
-  document.getElementById("qrImage").src =
-    `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(deepUrl)}`;
-  document.getElementById("qrModal").style.display = "flex";
-};
-
-// Register Inline PWA Service Worker for Offline Bathroom Sink Use
-if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
-  const swCode = `
-    const CACHE = 'dentguide-v1';
-    self.addEventListener('install', e => {
-      e.waitUntil(caches.open(CACHE).then(c => c.addAll([location.pathname])));
+    const damageSlider = document.getElementById('damageRangeSlider');
+    damageSlider.addEventListener('input', (e) => {
+      const val = parseFloat(e.target.value) / 100;
+      state.damageLevel = val;
+      updateDamageMetricsUI(val);
     });
-    self.addEventListener('fetch', e => {
-      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
-    });
-  `;
-  const blob = new Blob([swCode], { type: "application/javascript" });
-  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-}
 
-// Boot
-renderUI();
-updatePacerUI();
-requestAnimationFrame(renderCanvas);
-</script>
+    function updateDamageMetricsUI(val) {
+      const badge = document.getElementById('damageTimeBadge');
+      const recEl = document.getElementById('metricRecession');
+      const notchEl = document.getElementById('metricNotch');
+      const months = Math.max(1, Math.round(val * 60));
+      const years = (months / 12).toFixed(1);
+
+      badge.textContent = val < 0.15 ? `Month ${months}` : `Year ${years}`;
+      recEl.textContent = `+${(val * 3.8).toFixed(1)} mm Apical`;
+      notchEl.textContent = `${(val * 2.2).toFixed(1)} mm V-Wedge`;
+    }
+
+    // View Mode Buttons
+    document.querySelectorAll('.view-mode-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.viewMode = btn.getAttribute('data-view');
+        document.querySelectorAll('.view-mode-btn').forEach(b => {
+          b.className = 'view-mode-btn px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition bg-slate-800/90 text-slate-300 hover:bg-slate-800 border border-slate-700/70';
+        });
+        btn.className = 'view-mode-btn px-2.5 py-1.5 rounded-lg text-[11px] sm:text-xs font-semibold flex items-center justify-center gap-1.5 transition bg-teal-600 text-white shadow';
+      });
+    });
+
+    // Language Selector
+    document.getElementById('langSelect').addEventListener('change', (e) => {
+      state.lang = e.target.value;
+      applyLocalizationUI();
+      updatePacerUI();
+    });
+
+    // Smart Matcher Modal
+    const matcherModal = document.getElementById('matcherModal');
+    document.getElementById('openMatcherBtn').addEventListener('click', () => {
+      matcherModal.classList.remove('hidden');
+      matcherModal.classList.add('flex');
+      evaluateQuizPrescription();
+    });
+    document.getElementById('closeMatcherBtn').addEventListener('click', () => {
+      matcherModal.classList.add('hidden');
+      matcherModal.classList.remove('flex');
+    });
+
+    document.querySelectorAll('.quiz-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.getAttribute('data-q');
+        const val = btn.getAttribute('data-val');
+        state.quizSelection[q] = val;
+
+        btn.parentElement.querySelectorAll('.quiz-opt').forEach(sib => {
+          sib.classList.remove('border-teal-500/60', 'bg-teal-950/20');
+          sib.classList.add('border-slate-700');
+        });
+        btn.classList.remove('border-slate-700');
+        btn.classList.add('border-teal-500/60', 'bg-teal-950/20');
+        evaluateQuizPrescription();
+      });
+    });
+
+    function evaluateQuizPrescription() {
+      const { ortho, gums, dex } = state.quizSelection;
+      let recIndex = 1;
+      if (ortho === 'yes') recIndex = 3;
+      else if (gums === 'recession') recIndex = 2;
+      else if (dex === 'child') recIndex = 4;
+      else if (dex === 'adult_standard') recIndex = 0;
+
+      const tech = TECHNIQUES[recIndex];
+      const loc = tech.i18n[state.lang];
+      document.getElementById('quizRecTitle').textContent = loc.name;
+      document.getElementById('quizRecReason').textContent = loc.indication;
+      document.getElementById('applyMatcherBtn').onclick = () => {
+        selectTechnique(recIndex, true);
+        document.getElementById('matchedIndicator').classList.remove('hidden');
+        matcherModal.classList.add('hidden');
+        matcherModal.classList.remove('flex');
+      };
+    }
+
+    // Chairside QR Modal
+    const qrModal = document.getElementById('qrModal');
+    document.getElementById('openQrBtn').addEventListener('click', () => {
+      const tech = TECHNIQUES[state.currentTechIndex];
+      const baseUrl = window.location.origin + window.location.pathname;
+      const deepUrl = `${baseUrl}?method=${tech.id}&lang=${state.lang}`;
+      document.getElementById('qrMethodLabel').textContent = tech.i18n[state.lang].name;
+      document.getElementById('qrDeepLinkInput').value = deepUrl;
+      document.getElementById('qrCodeImg').src =
+        `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(deepUrl)}`;
+      qrModal.classList.remove('hidden');
+      qrModal.classList.add('flex');
+    });
+    document.getElementById('closeQrBtn').addEventListener('click', () => {
+      qrModal.classList.add('hidden');
+      qrModal.classList.remove('flex');
+    });
+    document.getElementById('copyQrLinkBtn').addEventListener('click', (e) => {
+      const input = document.getElementById('qrDeepLinkInput');
+      input.select();
+      document.execCommand('copy');
+      e.target.textContent = 'Copied!';
+      setTimeout(() => { e.target.textContent = 'Copy'; }, 1500);
+    });
+
+    const pacerModal = document.getElementById('pacerModal');
+    let audioCtx = null;
+
+    function playClinicalChime(type = 'surface') {
+      if (!state.pacer.audioEnabled) return;
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'quadrant') {
+          osc.frequency.setValueAtTime(587.33, now);
+          osc.frequency.setValueAtTime(880, now + 0.14);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.48);
+          osc.start(now);
+          osc.stop(now + 0.5);
+        } else if (type === 'complete') {
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.setValueAtTime(659.25, now + 0.12);
+          osc.frequency.setValueAtTime(783.99, now + 0.24);
+          gain.gain.setValueAtTime(0.16, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+          osc.start(now);
+          osc.stop(now + 0.68);
+        } else {
+          osc.frequency.setValueAtTime(659.25, now);
+          gain.gain.setValueAtTime(0.08, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.26);
+        }
+      } catch (err) {}
+    }
+
+    function speakCoachingPrompt(text) {
+      if (!state.pacer.voiceEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = state.lang === 'ar' ? 'ar-SA' : 'en-US';
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+
+    function openPacerModal() {
+      const tech = TECHNIQUES[state.currentTechIndex];
+      pacerModal.classList.remove('hidden');
+      pacerModal.classList.add('flex');
+
+      document.getElementById('pacerActiveMethodBadge').textContent = tech.i18n[state.lang].shortName;
+      const warningBox = document.getElementById('pacerContraindicatedWarning');
+      const activeBody = document.getElementById('pacerActiveBody');
+
+      if (!tech.timerEnabled) {
+        stopPacerTimer();
+        warningBox.classList.remove('hidden');
+        activeBody.classList.add('hidden');
+      } else {
+        warningBox.classList.add('hidden');
+        activeBody.classList.remove('hidden');
+        updatePacerUI();
+      }
+    }
+
+    document.getElementById('openPacerBtn').addEventListener('click', openPacerModal);
+    document.getElementById('sidebarLaunchPacerBtn').addEventListener('click', openPacerModal);
+    document.getElementById('closePacerBtn').addEventListener('click', () => {
+      stopPacerTimer();
+      pacerModal.classList.add('hidden');
+      pacerModal.classList.remove('flex');
+    });
+    document.getElementById('switchToModBassFromPacerBtn').addEventListener('click', () => {
+      selectTechnique(1, true);
+      openPacerModal();
+    });
+
+    function updatePacerUI() {
+      const rem = state.pacer.remainingSeconds;
+      const elapsed = 120 - rem;
+      const mins = Math.floor(rem / 60);
+      const secs = rem % 60;
+      document.getElementById('pacerTimeDisplay').textContent =
+        `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+      document.getElementById('pacerProgressBar').style.width = `${(elapsed / 120) * 100}%`;
+
+      const quadIdx = Math.min(3, Math.floor(elapsed / 30));
+      const quadElapsed = elapsed % 30;
+      const quadRem = 30 - quadElapsed;
+      const surfIdx = Math.min(2, Math.floor(quadElapsed / 10));
+
+      const ui = UI_LOCALE[state.lang];
+      document.getElementById('pacerQuadrantName').textContent = ui.quadNames[quadIdx];
+      document.getElementById('pacerSubTimer').textContent = `Quad: ${quadRem}s`;
+      document.getElementById('svgSurfaceLabel').textContent = ui.surfNames[surfIdx];
+
+      ['archQ1Glow', 'archQ2Glow', 'archQ3Glow', 'archQ4Glow'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (idx === quadIdx) {
+          el.setAttribute('stroke', '#14b8a6');
+          el.setAttribute('opacity', '0.55');
+        } else if (idx < quadIdx) {
+          el.setAttribute('stroke', '#0284c7');
+          el.setAttribute('opacity', '0.35');
+        } else {
+          el.setAttribute('stroke', '#334155');
+          el.setAttribute('opacity', '0.2');
+        }
+      });
+
+      ['surfPillBuccal', 'surfPillLingual', 'surfPillOcclusal'].forEach((id, idx) => {
+        const el = document.getElementById(id);
+        el.className = idx === surfIdx
+          ? 'py-1.5 px-1 rounded-lg bg-teal-500/20 border border-teal-500/50 text-teal-300 font-semibold'
+          : 'py-1.5 px-1 rounded-lg bg-slate-800 border border-slate-700 text-slate-400';
+      });
+
+      const tech = TECHNIQUES[state.currentTechIndex];
+      const loc = tech.i18n[state.lang];
+      document.getElementById('pacerLiveInstruction').innerHTML =
+        `<strong>${ui.quadNames[quadIdx]} — ${ui.surfNames[surfIdx]}:</strong> ${loc.name} (${tech.angleText}, ${tech.motionText}).`;
+    }
+
+    function togglePacerTimer() {
+      if (state.pacer.running) {
+        stopPacerTimer();
+      } else {
+        if (state.pacer.remainingSeconds <= 0) state.pacer.remainingSeconds = 120;
+        state.pacer.running = true;
+        document.getElementById('pacerStartPauseIcon').className = 'fa-solid fa-pause';
+        document.getElementById('pacerStartPauseText').textContent = 'Pause Session';
+        playClinicalChime('surface');
+
+        const ui = UI_LOCALE[state.lang];
+        speakCoachingPrompt(`${ui.quadNames[0]}, ${ui.surfNames[0]}`);
+
+        state.pacer.intervalId = setInterval(() => {
+          state.pacer.remainingSeconds--;
+          if (state.pacer.remainingSeconds <= 0) {
+            state.pacer.remainingSeconds = 0;
+            updatePacerUI();
+            playClinicalChime('complete');
+            stopPacerTimer();
+
+            // Increment Streak & Notify Telegram Bot if inside Telegram Mini App
+            state.streakCount++;
+            localStorage.setItem('dentguide_streak', String(state.streakCount));
+            document.getElementById('streakCountText').textContent = state.streakCount;
+
+            if (window.Telegram && window.Telegram.WebApp) {
+              try {
+                window.Telegram.WebApp.sendData(JSON.stringify({
+                  event: 'brushing_completed',
+                  method: TECHNIQUES[state.currentTechIndex].id,
+                  lang: state.lang,
+                  streak: state.streakCount
+                }));
+              } catch (e) {}
+            }
+
+            document.getElementById('pacerStartPauseText').textContent = 'Session Complete! Restart';
+            return;
+          }
+
+          const elapsed = 120 - state.pacer.remainingSeconds;
+          const qIdx = Math.min(3, Math.floor(elapsed / 30));
+          const sIdx = Math.min(2, Math.floor((elapsed % 30) / 10));
+
+          if (elapsed % 30 === 0) {
+            playClinicalChime('quadrant');
+            speakCoachingPrompt(`${ui.quadNames[qIdx]}, ${ui.surfNames[sIdx]}`);
+          } else if (elapsed % 10 === 0) {
+            playClinicalChime('surface');
+            speakCoachingPrompt(ui.surfNames[sIdx]);
+          }
+          updatePacerUI();
+        }, 1000);
+      }
+    }
+
+    function stopPacerTimer() {
+      state.pacer.running = false;
+      if (state.pacer.intervalId) {
+        clearInterval(state.pacer.intervalId);
+        state.pacer.intervalId = null;
+      }
+      document.getElementById('pacerStartPauseIcon').className = 'fa-solid fa-play';
+      document.getElementById('pacerStartPauseText').textContent =
+        state.pacer.remainingSeconds < 120 && state.pacer.remainingSeconds > 0
+          ? 'Resume Session'
+          : 'Start 2-Min Session';
+    }
+
+    document.getElementById('pacerStartPauseBtn').addEventListener('click', togglePacerTimer);
+    document.getElementById('pacerSkipQuadBtn').addEventListener('click', () => {
+      const elapsed = 120 - state.pacer.remainingSeconds;
+      const nextQuadElapsed = (Math.floor(elapsed / 30) + 1) * 30;
+      state.pacer.remainingSeconds = nextQuadElapsed >= 120 ? 120 : 120 - nextQuadElapsed;
+      playClinicalChime('quadrant');
+      updatePacerUI();
+    });
+    document.getElementById('pacerResetBtn').addEventListener('click', () => {
+      stopPacerTimer();
+      state.pacer.remainingSeconds = 120;
+      updatePacerUI();
+    });
+    document.getElementById('pacerAudioToggleBtn').addEventListener('click', () => {
+      state.pacer.audioEnabled = !state.pacer.audioEnabled;
+      document.getElementById('pacerAudioIcon').className = state.pacer.audioEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+      document.getElementById('pacerAudioText').textContent = state.pacer.audioEnabled ? 'Chimes ON' : 'Muted';
+    });
+    document.getElementById('pacerVoiceToggleBtn').addEventListener('click', () => {
+      state.pacer.voiceEnabled = !state.pacer.voiceEnabled;
+      document.getElementById('pacerVoiceText').textContent = state.pacer.voiceEnabled ? 'Voice ON' : 'Voice OFF';
+    });
+
+    // Stage Controls
+    document.getElementById('playPauseBtn').addEventListener('click', () => {
+      state.isPlaying = !state.isPlaying;
+      state.lockedStepIndex = null;
+      document.getElementById('playPauseIcon').className = state.isPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play';
+      document.getElementById('playPauseText').textContent = state.isPlaying ? 'Pause' : 'Play';
+      renderStepsList(TECHNIQUES[state.currentTechIndex]);
+    });
+
+    document.getElementById('speedToggleBtn').addEventListener('click', () => {
+      state.speedMultiplier = state.speedMultiplier === 1.0 ? 0.5 : 1.0;
+      document.getElementById('speedToggleText').textContent =
+        state.speedMultiplier === 1.0 ? '1.0x Normal' : '0.5x Slow-Mo';
+    });
+
+    document.getElementById('toggleVectorsBtn').addEventListener('click', () => {
+      state.showVectors = !state.showVectors;
+      document.getElementById('btnVectorsText').textContent = `Vectors: ${state.showVectors ? 'ON' : 'OFF'}`;
+    });
+
+    document.getElementById('toggleLoupeBtn').addEventListener('click', () => {
+      state.showLoupe = !state.showLoupe;
+      document.getElementById('btnLoupeText').textContent = `Loupe: ${state.showLoupe ? 'ON' : 'OFF'}`;
+    });
+
+    document.getElementById('resetPlaqueBtn').addEventListener('click', initPlaqueParticles);
+
+    document.getElementById('compareHorizontalBtn').addEventListener('click', () => {
+      if (TECHNIQUES[state.currentTechIndex].id === 'horizontal_scrub') {
+        selectTechnique(1, true);
+      } else {
+        selectTechnique(5, true);
+      }
+    });
+
+    window.onload = function () {
+      resizeCanvas();
+      initPlaqueParticles();
+      applyLocalizationUI();
+      updateDamageMetricsUI(state.damageLevel);
+      requestAnimationFrame(animateStage);
+    };
+  </script>
 </body>
 </html>
