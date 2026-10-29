@@ -25,10 +25,13 @@ from telegram.ext import (
 
 load_dotenv()
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
-WEBAPP_URL = os.environ.get("WEBAPP_URL", "")
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "").strip()
+WEBAPP_URL = os.environ.get(
+    "WEBAPP_URL",
+    "https://asefayirgu-hue.github.io/dentguide-pro/index.html",
+).strip()
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").strip()
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "").strip()
 
 # East Africa Time (UTC+3) for accurate 7:00 AM and 9:30 PM reminders
 EAT_TZ = ZoneInfo("Africa/Addis_Ababa")
@@ -91,6 +94,8 @@ def get_user_record(chat_id: int) -> dict:
 
 
 def schedule_user_reminders(job_queue, chat_id: int):
+    if job_queue is None:
+        return
     for job in job_queue.get_jobs_by_name(str(chat_id)):
         job.schedule_removal()
 
@@ -110,7 +115,7 @@ def schedule_user_reminders(job_queue, chat_id: int):
 
 async def restore_reminders_on_boot(app: Application) -> None:
     """Reloads all subscribed users from Supabase whenever the cloud server restarts."""
-    if not supabase:
+    if not supabase or app.job_queue is None:
         return
     try:
         res = supabase.table("dentguide_users").select("chat_id").eq("remind_enabled", True).execute()
@@ -141,6 +146,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [
             InlineKeyboardButton("🦷 Braces (Charter's - አማርኛ)", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=charters&lang=am")),
             InlineKeyboardButton("🧵 Interdental C-Floss", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=modified_bass&view=interdental&lang=am")),
+        ],
+        [
+            InlineKeyboardButton("💧 Paste Dosage (3D)", web_app=WebAppInfo(url=f"{WEBAPP_URL}?view=paste&lang=am")),
+            InlineKeyboardButton("👅 Tongue Cleaning", web_app=WebAppInfo(url=f"{WEBAPP_URL}?view=tongue&lang=am")),
         ],
     ]
 
@@ -229,7 +238,11 @@ async def postop_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     kb = InlineKeyboardMarkup([
         [InlineKeyboardButton("🦷 Braces & Bridges (Charter's 45°)", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=charters&lang=am"))],
         [InlineKeyboardButton("🛡️ Gum Recession & Sensitivity (Stillman's)", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=modified_stillman&lang=am"))],
-        [InlineKeyboardButton("🧵 Interdental C-Floss & Superfloss (View 3)", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=modified_bass&view=interdental&lang=am"))],
+        [InlineKeyboardButton("⚡ Lingual Surface & Enamel Wear Care", web_app=WebAppInfo(url=f"{WEBAPP_URL}?view=lingual&lang=am"))],
+        [InlineKeyboardButton("🦷 Occlusal Molar Fissure Brushing", web_app=WebAppInfo(url=f"{WEBAPP_URL}?view=occlusal&lang=am"))],
+        [InlineKeyboardButton("💧 Fluoride Toothpaste Dosage Guide", web_app=WebAppInfo(url=f"{WEBAPP_URL}?view=paste&lang=am"))],
+        [InlineKeyboardButton("👅 Tongue Scraper & Dorsum Cleaning", web_app=WebAppInfo(url=f"{WEBAPP_URL}?view=tongue&lang=am"))],
+        [InlineKeyboardButton("🧵 Interdental C-Floss & Superfloss", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=modified_bass&view=interdental&lang=am"))],
         [InlineKeyboardButton("⚠️ Why Horizontal Scrubbing Erodes Teeth", web_app=WebAppInfo(url=f"{WEBAPP_URL}?method=horizontal_scrub&lang=am"))],
     ])
     await update.message.reply_text(
@@ -296,8 +309,9 @@ async def remind_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 async def stop_remind_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat_id = update.effective_chat.id
-    for job in context.job_queue.get_jobs_by_name(str(chat_id)):
-        job.schedule_removal()
+    if context.job_queue is not None:
+        for job in context.job_queue.get_jobs_by_name(str(chat_id)):
+            job.schedule_removal()
     upsert_user(chat_id, remind_enabled=False)
     await update.message.reply_text("🔕 Daily brushing reminders paused.")
 
@@ -315,6 +329,9 @@ async def send_reminder(context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def main() -> None:
+    if not BOT_TOKEN:
+        raise RuntimeError("Missing BOT_TOKEN environment variable. Set BOT_TOKEN in Render or your .env file.")
+
     threading.Thread(target=start_health_server, daemon=True).start()
 
     app = Application.builder().token(BOT_TOKEN).post_init(restore_reminders_on_boot).build()
